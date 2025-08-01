@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ICF Calendar</title>
+    <link rel="stylesheet" href="/assets/css/custom.css" />
+    <link rel="shortcut icon" href="images/favicon/favicon-32x32.png" />
+    <style>
+      body {
+        display: flex;
+        margin: 0;
+        height: 100vh;
+      }
+      .main {
+        flex: 3;
+        padding: 20px;
+        overflow-y: auto;
+      }
+      .sidebar {
+        flex: 1;
+        max-width: 400px;
+        padding: 20px;
+        background: #f5f5f5;
+        overflow-y: auto;
+      }
+      .controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .filters {
+        display: flex;
+        gap: 10px;
+      }
+      .calendar-header {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+      .calendar-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .weekday-header {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+      .calendar {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+      }
+      .day {
+        position: relative;
+        border: 1px solid #ddd;
+        height: 95px;
+        padding: 4px;
+        cursor: pointer;
+      }
+      .day.today {
+        border: 2px solid #4285f4;
+      }
+      .date {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        font-size: 12px;
+        color: #666;
+      }
+      .birthday-dot {
+        width: 8px;
+        height: 8px;
+        background: #ff8a80;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 4px;
+        left: 4px;
+      }
+      .event-label {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        font-size: 10px;
+        background: #80d8ff;
+        padding: 2px 4px;
+        border-radius: 3px;
+      }
+      .modal-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        max-width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="controls">
+        <button id="todayBtn">Today</button>
+        <div class="filters">
+          <label
+            ><input type="checkbox" id="showBirthdays" checked />
+            Birthdays</label
+          >
+          <label
+            ><input type="checkbox" id="showEvents" checked /> Events</label
+          >
+        </div>
+      </div>
+      <div class="calendar-header" id="calendarHeader"></div>
+      <div class="calendar-wrapper" id="contentArea"></div>
+    </div>
+    <div class="sidebar">
+      <h3>Latest News</h3>
+      <ul id="newsList"></ul>
+    </div>
+
+    <!-- Modal for day details -->
+    <div class="modal-bg" id="modalBg">
+      <div class="modal">
+        <h4 id="modalDate"></h4>
+        <ul id="modalList"></ul>
+        <button id="closeModal">Close</button>
+      </div>
+    </div>
+
+    <script>
+      // Data arrays
+      let birthdays = [];
+      let events = [];
+
+      // Fetch JSON data from external files
+      async function loadData() {
+        try {
+          const bRes = await fetch("/data/birthdays.json");
+          birthdays = await bRes.json();
+        } catch (e) {
+          console.error("Failed to load birthdays.json", e);
+        }
+        try {
+          const eRes = await fetch("/data/events.json");
+          events = await eRes.json();
+        } catch (e) {
+          console.error("Failed to load events.json", e);
+        }
+        update();
+      }
+
+      let current = new Date();
+      const today = new Date();
+      const todayIso = `${today.getFullYear()}-${String(
+        today.getMonth() + 1
+      ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+      document.getElementById("todayBtn").onclick = () => {
+        current = new Date();
+        update();
+      };
+      document.getElementById("showBirthdays").onchange = update;
+      document.getElementById("showEvents").onchange = update;
+      document.getElementById("closeModal").onclick = () => {
+        document.getElementById("modalBg").style.display = "none";
+      };
+
+      function update() {
+        renderNews();
+        const container = document.getElementById("contentArea");
+        container.innerHTML = "";
+        renderMonth(container);
+      }
+
+      function renderMonth(container) {
+        // Header with prev/next (MM/YYYY)
+        const month = String(current.getMonth() + 1).padStart(2, "0");
+        const year = current.getFullYear();
+        const header = document.getElementById("calendarHeader");
+        header.innerHTML = `
+        <button id="prev">〈</button>
+        ${month}/${year}
+        <button id="next">〉</button>
+      `;
+        document.getElementById("prev").onclick = () => {
+          current.setMonth(current.getMonth() - 1);
+          update();
+        };
+        document.getElementById("next").onclick = () => {
+          current.setMonth(current.getMonth() + 1);
+          update();
+        };
+
+        // Weekday labels
+        const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const weekRow = document.createElement("div");
+        weekRow.className = "weekday-header";
+        weekdays.forEach((day) => {
+          const el = document.createElement("div");
+          el.innerText = day;
+          weekRow.appendChild(el);
+        });
+        container.appendChild(weekRow);
+
+        // Calendar grid
+        const cal = document.createElement("div");
+        cal.className = "calendar";
+        const firstDay = new Date(year, current.getMonth(), 1).getDay();
+        for (let i = 0; i < firstDay; i++)
+          cal.appendChild(document.createElement("div"));
+        const daysCount = new Date(year, current.getMonth() + 1, 0).getDate();
+        for (let d = 1; d <= daysCount; d++) {
+          const cell = document.createElement("div");
+          cell.className = "day";
+          const iso = `${year}-${month}-${String(d).padStart(2, "0")}`;
+          if (iso === todayIso) cell.classList.add("today");
+          cell.innerHTML = `<div class="date">${d}</div>`;
+          if (document.getElementById("showBirthdays").checked)
+            birthdays
+              .filter((b) => b.date === iso)
+              .forEach((b) => {
+                const dot = document.createElement("div");
+                dot.className = "birthday-dot";
+                dot.title = `${b.name}'s Birthday`;
+                cell.appendChild(dot);
+              });
+          if (document.getElementById("showEvents").checked)
+            events
+              .filter((e) => e.date === iso)
+              .forEach((e) => {
+                const lbl = document.createElement("div");
+                lbl.className = "event-label";
+                lbl.innerText = e.title;
+                cell.appendChild(lbl);
+              });
+          cell.onclick = () => showDetails(iso);
+          cal.appendChild(cell);
+        }
+        container.appendChild(cal);
+      }
+
+      function showDetails(iso) {
+        // Display full date as MM/DD/YYYY
+        const [y, m, d] = iso.split("-");
+        document.getElementById("modalDate").innerText = `${m}/${d}/${y}`;
+        const list = document.getElementById("modalList");
+        list.innerHTML = "";
+        if (document.getElementById("showBirthdays").checked)
+          birthdays
+            .filter((b) => b.date === iso)
+            .forEach(
+              (b) => (list.innerHTML += `<li>${b.name}'s Birthday</li>`)
+            );
+        if (document.getElementById("showEvents").checked)
+          events
+            .filter((e) => e.date === iso)
+            .forEach((e) => (list.innerHTML += `<li>${e.title}</li>`));
+        document.getElementById("modalBg").style.display = "flex";
+      }
+
+      function renderNews() {
+        const todayIso = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+        const newsEl = document.getElementById("newsList");
+        newsEl.innerHTML = "";
+        events
+          .filter((e) => e.date >= todayIso) // only future or today's events
+          .forEach((e) => {
+            const [y, m, d] = e.date.split("-");
+            newsEl.innerHTML += `<li>${m}/${d}/${y} – ${e.title}</li>`;
+          });
+      }
+
+      // Initial render
+      loadData();
+    </script>
+  </body>
+</html>

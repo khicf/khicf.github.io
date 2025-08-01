@@ -1,0 +1,72 @@
+/* Design Modified from: Jon Barron and Deepak Pathak and Tairan He.*/
+a {
+  color: #1772d0;
+  text-decoration: none;
+}
+a:focus,
+a:hover {
+  color: #f09228;
+  text-decoration: none;
+}
+body,
+td,
+th {
+  font-family: "Titillium Web", Verdana, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+heading {
+  font-family: "Titillium Web", Verdana, Helvetica, sans-serif;
+  font-size: 17px; /* 19 */
+  font-weight: 600; /* 1000 */
+}
+hr {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.75),
+    rgba(0, 0, 0, 0)
+  );
+}
+strong {
+  font-family: "Titillium Web", Verdana, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 600; /* 800 */
+}
+strongred {
+  font-family: "Titillium Web", Verdana, Helvetica, sans-serif;
+  color: "red";
+  font-size: 16px;
+}
+sectionheading {
+  font-family: "Titillium Web", Verdana, Helvetica, sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+}
+pageheading {
+  font-family: "Titillium Web", Verdana, Helvetica, sans-serif;
+  font-size: 38px;
+  font-weight: 400;
+}
+.ImageBorder {
+  border-width: 1px;
+  border-color: Black;
+}
+span.highlight {
+  background-color: #ffffd0;
+}
+
+/* The following is designed by Qixuan Huang */
+/* Only applied for qtplan */
+body.qtplan {
+  font-size: 14px;
+}
+
+/* Limit width for better reading experiences */
+body.qtplan > * {
+  max-width: 720px;
+  margin: 1.5rem 0 1.5rem 1.5rem;
+  padding: 0;
+}
