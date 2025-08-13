@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import Layout from "@/components/Layout";
 import { Inter, Playfair_Display } from 'next/font/google';
+import Providers from '@/components/Providers';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -23,8 +24,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${playfairDisplay.variable}`}>
+      <head>
+        <link rel="icon" href="/favicon.png" sizes="any" />
+      </head>
       <body>
-        <Layout>{children}</Layout>
+        <Providers>
+          <Layout>{children}</Layout>
+        </Providers>
       </body>
     </html>
   );

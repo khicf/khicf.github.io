@@ -6,39 +6,64 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-playfair-display), serif; /* Apply Playfair Display to headings */
+  color: #343a40; /* Slightly darker heading color */
 }
 
 /* Ensure Bootstrap components respect these colors */
 .card {
   background-color: #ffffff;
   color: #212529;
-  border: 1px solid #dee2e6; /* Light border for cards */
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Subtle shadow */
+  border: 1px solid #e0e0e0; /* Lighter border for cards */
+  border-radius: 0.75rem; /* More rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* More pronounced, softer shadow */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition for hover */
+}
+
+.card:hover {
+  transform: translateY(-3px); /* Lift effect on hover */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); /* Enhanced shadow on hover */
 }
 
 .navbar {
-  background-color: #e9ecef !important; /* Light navbar background */
-  border-bottom: 1px solid #dee2e6; /* Light border at the bottom of navbar */
+  background-color: #ffffff !important; /* White navbar background */
+  border-bottom: 1px solid #e0e0e0; /* Lighter border at the bottom of navbar */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow for navbar */
 }
 
 .navbar-brand, .nav-link {
-  color: #212529 !important; /* Dark text for navbar links */
+  color: #343a40 !important; /* Darker text for navbar links */
+  font-weight: 500;
+}
+
+.navbar-brand:hover, .nav-link:hover {
+  color: #007bff !important; /* Primary color on hover */
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: #007bff; /* Bootstrap primary blue */
   border-color: #007bff;
+  border-radius: 0.5rem; /* Slightly more rounded buttons */
+  padding: 0.6rem 1.2rem; /* More padding for buttons */
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.1s ease-in-out;
 }
 
 .btn-primary:hover {
   background-color: #0056b3;
   border-color: #0056b3;
+  transform: translateY(-1px); /* Slight lift on hover */
+}
+
+.btn-outline-primary {
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.2s ease-in-out;
 }
 
 /* General link styling */
 a {
   color: #007bff;
   text-decoration: none;
+  transition: color 0.2s ease-in-out;
 }
 
 a:hover {
@@ -48,21 +73,76 @@ a:hover {
 
 /* Custom Form Styling */
 .form-control {
-  border-radius: 0.3rem; /* Slightly rounded corners */
+  border-radius: 0.5rem; /* More rounded corners for forms */
   border: 1px solid #ced4da; /* Light gray border */
-  padding: 0.6rem 0.75rem; /* More comfortable padding */
+  padding: 0.75rem 1rem; /* More comfortable padding */
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .form-control:focus {
-  border-color: #80bdff; /* Lighter blue on focus */
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Subtle blue shadow on focus */
+  border-color: #007bff; /* Primary blue on focus */
+  box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* More prominent blue shadow on focus */
 }
 
 textarea.form-control {
-  min-height: 80px; /* Ensure textareas have a minimum height */
+  min-height: 100px; /* Ensure textareas have a minimum height */
 }
 
 .form-label {
-  font-weight: 500; /* Slightly bolder labels */
-  margin-bottom: 0.4rem; /* More space below labels */
+  font-weight: 600; /* Bolder labels */
+  margin-bottom: 0.5rem; /* More space below labels */
+  color: #343a40; /* Darker label color */
+}
+
+/* Jumbotron/Hero Section */
+.p-5.mb-4.bg-light.rounded-3 {
+  background: linear-gradient(135deg, #e0f2f7, #c2e0f0); /* Subtle blue gradient */
+  color: #212529;
+  border-radius: 1rem !important; /* More rounded hero section */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 4rem 3rem !important;
+}
+
+.p-5.mb-4.bg-light.rounded-3 h1 {
+  color: #0056b3; /* Darker blue for hero heading */
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.p-5.mb-4.bg-light.rounded-3 p {
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+
+/* List group items for recent content on homepage */
+.list-group-item {
+  border-radius: 0.5rem !important;
+  margin-bottom: 0.5rem;
+  border: 1px solid #e9ecef;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out; /* Added transform transition */
+}
+
+.list-group-item:hover {
+  background-color: #f0f2f5; /* Light hover background */
+  transform: translateX(5px); /* Subtle slide effect on hover */
+}
+
+.list-group-item strong {
+  color: #007bff;
+}
+
+/* Subtle fade-in animation for main content */
+.main-content-fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
