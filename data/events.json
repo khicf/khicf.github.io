@@ -1,6 +1,32 @@
 [
   {
-    "date": "2025-07-28",
-    "title": "Summer ICF"
+    "id": 1,
+    "title": "Friday Night Fellowship",
+    "date": "2025-09-05",
+    "time": "7:00 PM",
+    "description": "Join us for a time of worship, bible study, and fellowship.",
+    "location": "ICF Common Room, UIUC",
+    "contact": "John Doe (john.doe@example.com)",
+    "fullDescription": "Our weekly Friday Night Fellowship is a cornerstone of the ICF community. We gather to share a meal, engage in heartfelt worship, delve into God's word through interactive Bible study, and build strong bonds of fellowship. All students are welcome, whether you're new to campus or a long-time member. Come and experience the warmth of Christian community!"
+  },
+  {
+    "id": 2,
+    "title": "Saturday Morning Prayer",
+    "date": "2025-09-06",
+    "time": "9:00 AM",
+    "description": "A quiet time of prayer and reflection.",
+    "location": "Campus Prayer Room",
+    "contact": "Jane Smith (jane.smith@example.com)",
+    "fullDescription": "Start your Saturday with a dedicated time of prayer. This is a quiet, reflective session open to everyone who wishes to spend time in communion with God. We will pray for our campus, our community, and personal needs. Feel free to come and go as your schedule permits."
+  },
+  {
+    "id": 3,
+    "title": "Sunday Worship Service",
+    "date": "2025-09-07",
+    "time": "11:00 AM",
+    "description": "Our main weekly worship service.",
+    "location": "University Auditorium",
+    "contact": "Pastor Mark (pastor.mark@example.com)",
+    "fullDescription": "Join us for our main Sunday Worship Service, featuring contemporary worship music, an inspiring message from Pastor Mark, and opportunities for fellowship. We welcome students, faculty, and community members from all backgrounds. Children's ministry is available during the service."
   }
 ]

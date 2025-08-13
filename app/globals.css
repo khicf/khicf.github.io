@@ -1,0 +1,68 @@
+body {
+  background-color: #f8f9fa; /* Light gray background */
+  color: #212529; /* Dark text color */
+  font-family: var(--font-inter), sans-serif; /* Apply Inter to body */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair-display), serif; /* Apply Playfair Display to headings */
+}
+
+/* Ensure Bootstrap components respect these colors */
+.card {
+  background-color: #ffffff;
+  color: #212529;
+  border: 1px solid #dee2e6; /* Light border for cards */
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Subtle shadow */
+}
+
+.navbar {
+  background-color: #e9ecef !important; /* Light navbar background */
+  border-bottom: 1px solid #dee2e6; /* Light border at the bottom of navbar */
+}
+
+.navbar-brand, .nav-link {
+  color: #212529 !important; /* Dark text for navbar links */
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+/* General link styling */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* Custom Form Styling */
+.form-control {
+  border-radius: 0.3rem; /* Slightly rounded corners */
+  border: 1px solid #ced4da; /* Light gray border */
+  padding: 0.6rem 0.75rem; /* More comfortable padding */
+}
+
+.form-control:focus {
+  border-color: #80bdff; /* Lighter blue on focus */
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Subtle blue shadow on focus */
+}
+
+textarea.form-control {
+  min-height: 80px; /* Ensure textareas have a minimum height */
+}
+
+.form-label {
+  font-weight: 500; /* Slightly bolder labels */
+  margin-bottom: 0.4rem; /* More space below labels */
+}

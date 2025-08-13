@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id              Int     @id @default(autoincrement())
+  title           String
+  date            String
+  time            String
+  description     String
+  location        String?
+  contact         String?
+  fullDescription String?
+}
+
+model Prayer {
+  id      Int       @id @default(autoincrement())
+  request String
+  author  String?
+  date    String
+  comments Comment[]
+}
+
+model Comment {
+  id        Int     @id @default(autoincrement())
+  text      String
+  author    String?
+  date      String
+  prayerId  Int
+  prayer    Prayer  @relation(fields: [prayerId], references: [id])
+}
+
+model Scripture {
+  id        Int     @id @default(autoincrement())
+  passage   String
+  reference String
+  author    String
+  date      String
+}

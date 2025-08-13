@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "request": "Please pray for my upcoming exams.",
+    "author": "A Student",
+    "date": "2025-08-12",
+    "comments": [
+      {
+        "id": 1,
+        "author": "Community Member 1",
+        "text": "Praying for you! You got this!",
+        "date": "2025-08-12"
+      },
+      {
+        "id": 2,
+        "author": "Community Member 2",
+        "text": "May God grant you peace and wisdom during your exams.",
+        "date": "2025-08-13"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "request": "Pray for my family's health.",
+    "author": "A Friend",
+    "date": "2025-08-11",
+    "comments": [
+      {
+        "id": 3,
+        "author": "Community Member 3",
+        "text": "Sending prayers for healing and strength to your family.",
+        "date": "2025-08-11"
+      }
+    ]
+  }
+]
