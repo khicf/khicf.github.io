@@ -36,7 +36,7 @@ export default function EventDetailPage() {
       <p className="lead">{event.description}</p>
       <hr />
       <p><strong>Date:</strong> {event.date}</p>
-      <p><strong>Time:</strong> {event.time}</p>
+      {event.time && <p><strong>Time:</strong> {event.time}</p>}
       <p><strong>Location:</strong> {event.location}</p>
       <p><strong>Contact:</strong> {event.contact}</p>
       <p>{event.fullDescription}</p>

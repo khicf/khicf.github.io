@@ -14,7 +14,7 @@ model Event {
   id              Int     @id @default(autoincrement())
   title           String
   date            String
-  time            String
+  time            String?
   description     String
   location        String?
   contact         String?
@@ -81,8 +81,11 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
+  role          Role      @default(USER)
   accounts      Account[]
   sessions      Session[]
+  photos        Photo[]
+  appreciations Appreciation[]
 }
 
 model VerificationToken {
@@ -91,4 +94,26 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Photo {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  caption   String?
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Appreciation {
+  id        Int      @id @default(autoincrement())
+  message   String
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  USER
+  ADMIN
 }

@@ -43,6 +43,7 @@ const handler = NextAuth({
             id: user.id,
             name: user.name,
             email: user.email,
+            role: user.role,
           };
         } catch (error) {
           console.error("Authorize: An unexpected error occurred", error);
@@ -60,14 +61,20 @@ const handler = NextAuth({
   },
   callbacks: {
     async jwt({ token, user }) {
+      console.log('USER IN JWT CALLBACK', user);
       if (user) {
         token.id = user.id;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
+      console.log('TOKEN IN SESSION CALLBACK', token);
       if (token.id) {
         session.user.id = token.id;
+      }
+      if (token.role) {
+        session.user.role = token.role;
       }
       return session;
     },

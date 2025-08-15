@@ -1,6 +1,11 @@
+'use client';
+
 import Link from 'next/link';
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 export default function Navbar() {
+  const { data: session } = useSession();
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -9,7 +14,7 @@ export default function Navbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
+          <ul className="navbar-nav me-auto">
             <li className="nav-item">
               <Link href="/" className="nav-link">Home</Link>
             </li>
@@ -22,6 +27,27 @@ export default function Navbar() {
             <li className="nav-item">
               <Link href="/scripture" className="nav-link">Scripture Feed</Link>
             </li>
+            {session && (
+              <li className="nav-item">
+                <Link href="/appreciation" className="nav-link">Appreciation Wall</Link>
+              </li>
+            )}
+            {session?.user?.role === 'ADMIN' && (
+              <li className="nav-item">
+                <Link href="/photos" className="nav-link">Photo Album</Link>
+              </li>
+            )}
+          </ul>
+          <ul className="navbar-nav">
+            {session ? (
+              <li className="nav-item">
+                <button className="btn btn-link nav-link" onClick={() => signOut()}>Logout</button>
+              </li>
+            ) : (
+              <li className="nav-item">
+                <button className="btn btn-link nav-link" onClick={() => signIn()}>Login</button>
+              </li>
+            )}
           </ul>
         </div>
       </div>

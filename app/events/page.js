@@ -45,7 +45,7 @@ export default function EventsPage() {
             <Link href={`/events/${event.id}`} key={event.id} className="list-group-item list-group-item-action flex-column align-items-start">
               <div className="d-flex w-100 justify-content-between">
                 <h5 className="mb-1">{event.title}</h5>
-                <small>{event.date} at {event.time}</small>
+                <small>{event.date}{event.time ? ` at ${event.time}` : ''}</small>
               </div>
               <p className="mb-1">{event.description}</p>
             </Link>

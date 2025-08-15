@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
+import Link from 'next/link';
 import AdminEvents from '@/components/AdminEvents';
 import AdminPrayers from '@/components/AdminPrayers';
 import AdminScriptures from '@/components/AdminScriptures';
@@ -71,6 +72,9 @@ export default function AdminPage() {
                   <button type="submit" className="btn btn-primary">Login</button>
                   {message && <p className="text-danger mt-2">{message}</p>}
                 </form>
+                <p className="mt-3 text-center">
+                  Don't have an account? <Link href="/signup">Sign Up</Link>
+                </p>
               </div>
             </div>
           </div>

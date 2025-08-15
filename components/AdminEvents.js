@@ -122,7 +122,7 @@ export default function AdminEvents() {
             </div>
             <div className="mb-3">
               <label htmlFor="time" className="form-label">Time</label>
-              <input type="text" className="form-control" id="time" name="time" value={newEvent.time} onChange={handleInputChange} placeholder="e.g., 7:00 PM" required />
+              <input type="text" className="form-control" id="time" name="time" value={newEvent.time} onChange={handleInputChange} placeholder="e.g., 7:00 PM" />
             </div>
             <div className="mb-3">
               <label htmlFor="description" className="form-label">Short Description</label>
@@ -152,7 +152,7 @@ export default function AdminEvents() {
             <div key={event.id} className="list-group-item d-flex justify-content-between align-items-center">
               <div>
                 <h5>{event.title}</h5>
-                <p><small>{event.date} at {event.time} - {event.location}</small></p>
+                <p><small>{event.date}{event.time ? ` at ${event.time}` : ''} - {event.location}</small></p>
                 <p>{event.description}</p>
               </div>
               <div>
@@ -187,7 +187,7 @@ export default function AdminEvents() {
                   </div>
                   <div className="mb-3">
                     <label htmlFor="editTime" className="form-label">Time</label>
-                    <input type="text" className="form-control" id="editTime" name="time" value={editingEvent.time} onChange={handleEditInputChange} placeholder="e.g., 7:00 PM" required />
+                    <input type="text" className="form-control" id="editTime" name="time" value={editingEvent.time} onChange={handleEditInputChange} placeholder="e.g., 7:00 PM" />
                   </div>
                   <div className="mb-3">
                     <label htmlFor="editDescription" className="form-label">Short Description</label>
