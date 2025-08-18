@@ -4,7 +4,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 
-const handler = NextAuth({
+export const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
@@ -57,7 +57,7 @@ const handler = NextAuth({
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: '/admin', // Redirect to admin page for sign in
+    signIn: '/login', // Redirect to login page for sign in
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -70,8 +70,14 @@ const handler = NextAuth({
     },
     async session({ session, token }) {
       console.log('TOKEN IN SESSION CALLBACK', token);
+      // Ensure session.user is defined
+      if (!session.user) {
+        session.user = {};
+      }
       if (token.id) {
         session.user.id = token.id;
+      } else if (token.sub) { // Fallback to token.sub if token.id is not directly set
+        session.user.id = token.sub;
       }
       if (token.role) {
         session.user.role = token.role;
@@ -79,6 +85,8 @@ const handler = NextAuth({
       return session;
     },
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

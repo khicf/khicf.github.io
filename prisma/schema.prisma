@@ -84,7 +84,7 @@ model User {
   role          Role      @default(USER)
   accounts      Account[]
   sessions      Session[]
-  photos        Photo[]
+  
   appreciations Appreciation[]
 }
 
@@ -96,14 +96,7 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Photo {
-  id        Int      @id @default(autoincrement())
-  imageUrl  String
-  caption   String?
-  createdAt DateTime @default(now())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
+
 
 model Appreciation {
   id        Int      @id @default(autoincrement())

@@ -15,6 +15,7 @@ async function main() {
         email: email,
         name: 'Admin',
         password: hashedPassword,
+        role: 'ADMIN',
       },
     });
     console.log(`Admin user created: ${user.email}`);

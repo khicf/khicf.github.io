@@ -32,17 +32,23 @@ export default function Navbar() {
                 <Link href="/appreciation" className="nav-link">Appreciation Wall</Link>
               </li>
             )}
+            
             {session?.user?.role === 'ADMIN' && (
               <li className="nav-item">
-                <Link href="/photos" className="nav-link">Photo Album</Link>
+                <Link href="/admin" className="nav-link">Admin Panel</Link>
               </li>
             )}
           </ul>
           <ul className="navbar-nav">
             {session ? (
-              <li className="nav-item">
-                <button className="btn btn-link nav-link" onClick={() => signOut()}>Logout</button>
-              </li>
+              <>
+                <li className="nav-item">
+                  <span className="nav-link">Welcome, {session.user.name}</span>
+                </li>
+                <li className="nav-item">
+                  <button className="btn btn-link nav-link" onClick={() => signOut()}>Logout</button>
+                </li>
+              </>
             ) : (
               <li className="nav-item">
                 <button className="btn btn-link nav-link" onClick={() => signIn()}>Login</button>

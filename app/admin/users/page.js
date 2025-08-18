@@ -1,14 +1,14 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { redirect } from 'next/navigation';
-import AppreciationWallPageClient from './AppreciationWallPageClient';
+import AdminUsers from '@/components/AdminUsers';
 
-export default async function AppreciationWallPage() {
+export default async function AdminUsersPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
-    redirect('/api/auth/signin');
+  if (!session || session.user.role !== 'ADMIN') {
+    redirect('/');
   }
 
-  return <AppreciationWallPageClient />;
+  return <AdminUsers />;
 }
