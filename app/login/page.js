@@ -22,7 +22,13 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
-      setMessage(result.error);
+      if (result.error === 'CredentialsSignin') {
+        setMessage('Invalid email or password.');
+      } else if (result.error === 'User not approved') {
+        setMessage('Your account is pending approval.');
+      } else {
+        setMessage(result.error);
+      }
     } else {
       router.push('/');
     }

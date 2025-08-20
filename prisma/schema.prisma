@@ -78,6 +78,7 @@ model User {
   image         String?
   password      String?
   role          Role           @default(USER)
+  approved      Boolean        @default(false)
   accounts      Account[]
   appreciations Appreciation[]
   sessions      Session[]

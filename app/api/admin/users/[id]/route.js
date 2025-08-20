@@ -20,3 +20,21 @@ export async function PUT(req, { params }) {
     );
   }
 }
+
+export async function DELETE(req, { params }) {
+  try {
+    const { id } = params;
+
+    await prisma.user.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ message: "User deleted successfully." }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: "Something went wrong." },
+      { status: 500 }
+    );
+  }
+}

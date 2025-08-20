@@ -25,7 +25,7 @@ export default function SignupPage() {
       });
 
       if (res.ok) {
-        router.push('/admin');
+        router.push('/signup/pending');
       } else {
         const data = await res.json();
         setError(data.message || 'Something went wrong.');

@@ -31,6 +31,11 @@ export const authOptions = {
             return null;
           }
 
+          if (!user.approved) {
+            console.error("Authorize: User not approved");
+            throw new Error("User not approved");
+          }
+
           const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
           if (!isPasswordValid) {
@@ -47,7 +52,7 @@ export const authOptions = {
           };
         } catch (error) {
           console.error("Authorize: An unexpected error occurred", error);
-          return null; // Return null on error to prevent login
+          throw error;
         }
       }
     })
