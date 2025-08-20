@@ -14,9 +14,9 @@ This project is a website for the International Christian Fellowship (ICF) commu
 
 **Privacy and Access Control Implementation:**
 
-*   **Admin-Only Access:** Implemented role-based access control for the admin panel. The pages `/admin` and `/admin/users` are now only accessible to users with the `ADMIN` role. Unauthorized users are redirected.
-*   **Member-Only Access:** The "Prayer Wall" (`/prayer`) and "Appreciation Wall" (`/appreciation`) pages are now accessible only to authenticated users. Unauthenticated users are redirected to the login page.
-*   **Public Login Page:** Created a dedicated, public login page at `/login` to separate it from the admin panel.
+* **Admin-Only Access:** Implemented role-based access control for the admin panel. The pages `/admin` and `/admin/users` are now only accessible to users with the `ADMIN` role. Unauthorized users are redirected.
+* **Member-Only Access:** The "Prayer Wall" (`/prayer`) and "Appreciation Wall" (`/appreciation`) pages are now accessible only to authenticated users. Unauthenticated users are redirected to the login page.
+* **Public Login Page:** Created a dedicated, public login page at `/login` to separate it from the admin panel.
 
 # Future Features
 
@@ -46,7 +46,6 @@ Here are some potential features that could be added to the website:
 * **Prayer Request Follow-up:** A system for following up on prayer requests to see how God has answered them.
 * **Testimonies:** A section where users can share their testimonies.
 * **Guest Book:** A guest book where visitors can leave comments.
-* **Photo Gallery:** A gallery of photos from church events.
 * **Video Gallery:** A gallery of videos from church events.
 * **Music Ministry Page:** A page for the music ministry, with information about the choir, worship team, and other musical groups.
 * **Youth Ministry Page:** A page for the youth ministry, with information about upcoming events and other activities.

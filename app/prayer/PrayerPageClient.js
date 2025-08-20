@@ -1,19 +1,22 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 
 export default function PrayerPageClient() {
+  const { data: session } = useSession();
   const [allPrayers, setAllPrayers] = useState([]);
   const [filteredPrayers, setFilteredPrayers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [request, setRequest] = useState('');
   const [author, setAuthor] = useState('');
+  const [isPublic, setIsPublic] = useState(true);
   const [commentText, setCommentText] = useState('');
   const [commentAuthor, setCommentAuthor] = useState('');
 
   const fetchPrayers = () => {
-    fetch('/api/prayers')
+    const url = session ? '/api/prayers' : '/api/prayers?public=true';
+    fetch(url)
       .then(res => res.json())
       .then(data => {
         setAllPrayers(data.prayers.reverse());
@@ -23,7 +26,7 @@ export default function PrayerPageClient() {
 
   useEffect(() => {
     fetchPrayers();
-  }, []);
+  }, [session]);
 
   useEffect(() => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
@@ -43,12 +46,13 @@ export default function PrayerPageClient() {
     const res = await fetch('/api/prayers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ request, author }),
+      body: JSON.stringify({ request, author, isPublic }),
     });
     if (res.ok) {
       fetchPrayers();
       setRequest('');
       setAuthor('');
+      setIsPublic(true);
     }
   };
 
@@ -79,29 +83,44 @@ export default function PrayerPageClient() {
           onChange={e => setSearchTerm(e.target.value)}
         />
       </div>
-      <div className="card mb-4">
-        <div className="card-body">
-          <h5 className="card-title">Submit a Prayer Request</h5>
-          <form onSubmit={handlePrayerSubmit}>
-            <div className="mb-3">
-              <label htmlFor="request" className="form-label">Request</label>
-              <textarea className="form-control" id="request" rows="3" value={request} onChange={e => setRequest(e.target.value)} required></textarea>
-            </div>
-            <div className="mb-3">
-              <label htmlFor="author" className="form-label">Your Name (Optional)</label>
-              <input type="text" className="form-control" id="author" value={author} onChange={e => setAuthor(e.target.value)} placeholder="A Friend" />
-            </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
-          </form>
+      {session && (
+        <div className="card mb-4">
+          <div className="card-body">
+            <h5 className="card-title">Submit a Prayer Request</h5>
+            <form onSubmit={handlePrayerSubmit}>
+              <div className="mb-3">
+                <label htmlFor="request" className="form-label">Request</label>
+                <textarea className="form-control" id="request" rows="3" value={request} onChange={e => setRequest(e.target.value)} required></textarea>
+              </div>
+              <div className="mb-3">
+                <label htmlFor="author" className="form-label">Your Name (Optional)</label>
+                <input type="text" className="form-control" id="author" value={author} onChange={e => setAuthor(e.target.value)} placeholder="A Friend" />
+              </div>
+              <div className="form-check mb-3">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="isPublic"
+                  checked={isPublic}
+                  onChange={e => setIsPublic(e.target.checked)}
+                />
+                <label className="form-check-label" htmlFor="isPublic">
+                  Make this prayer public
+                </label>
+              </div>
+              <button type="submit" className="btn btn-primary">Submit</button>
+            </form>
+          </div>
         </div>
-      </div>
+      )}
 
       {filteredPrayers.length > 0 ? (
         filteredPrayers.map(prayer => (
-          <div key={prayer.id} className="card mb-3">
+          <div key={prayer.id} className={`card mb-3 ${!prayer.isPublic ? 'border-secondary' : ''}`}>
             <div className="card-body">
               <p className="card-text">{prayer.request}</p>
               <footer className="blockquote-footer">{prayer.author || 'Anonymous'} on <cite title="Source Title">{new Date(prayer.date).toLocaleDateString()}</cite></footer>
+              {!prayer.isPublic && <span className="badge bg-secondary">Private</span>}
 
               <div className="mt-3">
                 <h6>Comments:</h6>
@@ -116,26 +135,28 @@ export default function PrayerPageClient() {
                   <p className="text-muted">No comments yet. Be the first to encourage!</p>
                 )}
 
-                <div className="mt-3">
-                  <textarea
-                    className="form-control mb-2"
-                    rows="2"
-                    placeholder="Add a comment..."
-                    value={commentText}
-                    onChange={e => setCommentText(e.target.value)}
-                  ></textarea>
-                  <input
-                    type="text"
-                    className="form-control mb-2"
-                    placeholder="Your Name (Optional)"
-                    value={commentAuthor}
-                    onChange={e => setCommentAuthor(e.target.value)}
-                  />
-                  <button
-                    className="btn btn-sm btn-outline-primary"
-                    onClick={() => handleCommentSubmit(prayer.id)}
-                  >Add Comment</button>
-                </div>
+                {session && (
+                  <div className="mt-3">
+                    <textarea
+                      className="form-control mb-2"
+                      rows="2"
+                      placeholder="Add a comment..."
+                      value={commentText}
+                      onChange={e => setCommentText(e.target.value)}
+                    ></textarea>
+                    <input
+                      type="text"
+                      className="form-control mb-2"
+                      placeholder="Your Name (Optional)"
+                      value={commentAuthor}
+                      onChange={e => setCommentAuthor(e.target.value)}
+                    />
+                    <button
+                      className="btn btn-sm btn-outline-primary"
+                      onClick={() => handleCommentSubmit(prayer.id)}
+                    >Add Comment</button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
