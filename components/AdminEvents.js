@@ -12,6 +12,7 @@ export default function AdminEvents() {
     location: '',
     contact: '',
     fullDescription: '',
+    isPublic: true,
   });
   const [editingEvent, setEditingEvent] = useState(null); // State to hold event being edited
   const [message, setMessage] = useState('');
@@ -22,7 +23,7 @@ export default function AdminEvents() {
 
   const fetchEvents = async () => {
     try {
-      const res = await fetch('/api/events');
+      const res = await fetch('/api/events?show=all');
       if (!res.ok) throw new Error('Failed to fetch events');
       const data = await res.json();
       setEvents(data.events);
@@ -32,8 +33,8 @@ export default function AdminEvents() {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewEvent({ ...newEvent, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setNewEvent({ ...newEvent, [name]: type === 'checkbox' ? checked : value });
   };
 
   const handleAddEvent = async (e) => {
@@ -54,6 +55,7 @@ export default function AdminEvents() {
         location: '',
         contact: '',
         fullDescription: '',
+        isPublic: true,
       });
       fetchEvents(); // Refresh the list
     } catch (err) {
@@ -66,8 +68,8 @@ export default function AdminEvents() {
   };
 
   const handleEditInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditingEvent({ ...editingEvent, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setEditingEvent({ ...editingEvent, [name]: type === 'checkbox' ? checked : value });
   };
 
   const handleUpdateEvent = async (e) => {
@@ -140,6 +142,10 @@ export default function AdminEvents() {
               <label htmlFor="fullDescription" className="form-label">Full Description</label>
               <textarea className="form-control" id="fullDescription" name="fullDescription" rows="4" value={newEvent.fullDescription} onChange={handleInputChange}></textarea>
             </div>
+            <div className="mb-3 form-check">
+              <input type="checkbox" className="form-check-input" id="isPublic" name="isPublic" checked={newEvent.isPublic} onChange={handleInputChange} />
+              <label className="form-check-label" htmlFor="isPublic">Public Event</label>
+            </div>
             <button type="submit" className="btn btn-primary">Add Event</button>
           </form>
         </div>
@@ -204,6 +210,10 @@ export default function AdminEvents() {
                   <div className="mb-3">
                     <label htmlFor="editFullDescription" className="form-label">Full Description</label>
                     <textarea className="form-control" id="editFullDescription" name="fullDescription" rows="4" value={editingEvent.fullDescription} onChange={handleEditInputChange}></textarea>
+                  </div>
+                  <div className="mb-3 form-check">
+                    <input type="checkbox" className="form-check-input" id="editIsPublic" name="isPublic" checked={editingEvent.isPublic} onChange={handleEditInputChange} />
+                    <label className="form-check-label" htmlFor="editIsPublic">Public Event</label>
                   </div>
                 </form>
               </div>

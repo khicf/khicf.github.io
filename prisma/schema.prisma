@@ -16,6 +16,7 @@ model Event {
   location        String?
   contact         String?
   fullDescription String?
+  isPublic        Boolean @default(true)
 }
 
 model Prayer {

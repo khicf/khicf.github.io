@@ -15,7 +15,7 @@ export default function HomePage() {
       .then(data => setLatestEvents(data.events.slice(0, 3))); // Get top 3
 
     // Fetch Recent Prayer Requests
-    fetch('/api/prayers')
+    fetch('/api/prayers?public=true')
       .then(res => res.json())
       .then(data => setRecentPrayers(data.prayers.slice(0, 3))); // Get top 3
 

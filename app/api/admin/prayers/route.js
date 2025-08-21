@@ -22,13 +22,14 @@ export async function POST(request) {
 
 export async function PUT(request) {
   try {
-    const { id, request: prayerRequest, author } = await request.json();
+    const { id, request: prayerRequest, author, isPublic } = await request.json();
 
     const updatedPrayer = await prisma.prayer.update({
       where: { id: parseInt(id) },
       data: {
         request: prayerRequest,
         author: author || 'Anonymous',
+        isPublic: isPublic,
       },
     });
 

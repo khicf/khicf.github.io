@@ -4,10 +4,6 @@ import { useState, useEffect } from 'react';
 
 export default function AdminPrayers() {
   const [prayers, setPrayers] = useState([]);
-  const [newPrayer, setNewPrayer] = useState({
-    request: '',
-    author: '',
-  });
   const [editingPrayer, setEditingPrayer] = useState(null);
   const [message, setMessage] = useState('');
 
@@ -26,27 +22,7 @@ export default function AdminPrayers() {
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewPrayer({ ...newPrayer, [name]: value });
-  };
-
-  const handleAddPrayer = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch('/api/admin/prayers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newPrayer),
-      });
-      if (!res.ok) throw new Error('Failed to add prayer');
-      setMessage('Prayer added successfully!');
-      setNewPrayer({ request: '', author: '' });
-      fetchPrayers();
-    } catch (err) {
-      setMessage(`Error adding prayer: ${err.message}`);
-    }
-  };
+  
 
   const handleEditClick = (prayer) => {
     setEditingPrayer({ ...prayer });
@@ -74,6 +50,21 @@ export default function AdminPrayers() {
     }
   };
 
+  const handleToggleVisibility = async (prayer) => {
+    try {
+      const res = await fetch('/api/admin/prayers', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...prayer, isPublic: !prayer.isPublic }),
+      });
+      if (!res.ok) throw new Error('Failed to update prayer visibility');
+      setMessage('Prayer visibility updated successfully!');
+      fetchPrayers();
+    } catch (err) {
+      setMessage(`Error updating prayer visibility: ${err.message}`);
+    }
+  };
+
   const handleDeletePrayer = async (id) => {
     if (confirm('Are you sure you want to delete this prayer and all its comments?')) {
       try {
@@ -95,22 +86,7 @@ export default function AdminPrayers() {
     <div>
       {message && <div className="alert alert-info">{message}</div>}
 
-      <div className="card mb-4">
-        <div className="card-body">
-          <h5 className="card-title">Add New Prayer Request</h5>
-          <form onSubmit={handleAddPrayer}>
-            <div className="mb-3">
-              <label htmlFor="request" className="form-label">Request</label>
-              <textarea className="form-control" id="request" name="request" rows="3" value={newPrayer.request} onChange={handleInputChange} required></textarea>
-            </div>
-            <div className="mb-3">
-              <label htmlFor="author" className="form-label">Author (Optional)</label>
-              <input type="text" className="form-control" id="author" name="author" value={newPrayer.author} onChange={handleInputChange} />
-            </div>
-            <button type="submit" className="btn btn-primary">Add Prayer</button>
-          </form>
-        </div>
-      </div>
+      
 
       <h2>Existing Prayer Requests</h2>
       <div className="list-group mb-4">
@@ -123,6 +99,9 @@ export default function AdminPrayers() {
               </div>
               <div>
                 <button className="btn btn-sm btn-warning me-2" onClick={() => handleEditClick(prayer)}>Edit</button>
+                <button className="btn btn-sm btn-secondary me-2" onClick={() => handleToggleVisibility(prayer)}>
+                  {prayer.isPublic ? 'Make Private' : 'Make Public'}
+                </button>
                 <button className="btn btn-sm btn-danger" onClick={() => handleDeletePrayer(prayer.id)}>Delete</button>
               </div>
             </div>

@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma';
 
 export async function POST(request) {
   try {
-    const { title, date, time, description, location, contact, fullDescription } = await request.json();
+    const { title, date, time, description, location, contact, fullDescription, isPublic } = await request.json();
 
     const newEvent = await prisma.event.create({
       data: {
@@ -14,6 +14,7 @@ export async function POST(request) {
         location,
         contact,
         fullDescription,
+        isPublic,
       },
     });
 
@@ -26,7 +27,7 @@ export async function POST(request) {
 
 export async function PUT(request) {
   try {
-    const { id, title, date, time, description, location, contact, fullDescription } = await request.json();
+    const { id, title, date, time, description, location, contact, fullDescription, isPublic } = await request.json();
 
     const updatedEvent = await prisma.event.update({
       where: { id: parseInt(id) },
@@ -38,6 +39,7 @@ export async function PUT(request) {
         location,
         contact,
         fullDescription,
+        isPublic,
       },
     });
 

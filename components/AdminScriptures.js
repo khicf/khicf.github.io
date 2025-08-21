@@ -4,11 +4,6 @@ import { useState, useEffect } from 'react';
 
 export default function AdminScriptures() {
   const [scriptures, setScriptures] = useState([]);
-  const [newScripture, setNewScripture] = useState({
-    passage: '',
-    reference: '',
-    author: '',
-  });
   const [editingScripture, setEditingScripture] = useState(null);
   const [message, setMessage] = useState('');
 
@@ -27,27 +22,7 @@ export default function AdminScriptures() {
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewScripture({ ...newScripture, [name]: value });
-  };
-
-  const handleAddScripture = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch('/api/admin/scriptures', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newScripture),
-      });
-      if (!res.ok) throw new Error('Failed to add scripture');
-      setMessage('Scripture added successfully!');
-      setNewScripture({ passage: '', reference: '', author: '' });
-      fetchScriptures();
-    } catch (err) {
-      setMessage(`Error adding scripture: ${err.message}`);
-    }
-  };
+  
 
   const handleEditClick = (scripture) => {
     setEditingScripture({ ...scripture });
@@ -96,26 +71,7 @@ export default function AdminScriptures() {
     <div>
       {message && <div className="alert alert-info">{message}</div>}
 
-      <div className="card mb-4">
-        <div className="card-body">
-          <h5 className="card-title">Add New Scripture</h5>
-          <form onSubmit={handleAddScripture}>
-            <div className="mb-3">
-              <label htmlFor="passage" className="form-label">Passage</label>
-              <textarea className="form-control" id="passage" name="passage" rows="3" value={newScripture.passage} onChange={handleInputChange} required></textarea>
-            </div>
-            <div className="mb-3">
-              <label htmlFor="reference" className="form-label">Reference</label>
-              <input type="text" className="form-control" id="reference" name="reference" value={newScripture.reference} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="author" className="form-label">Author</label>
-              <input type="text" className="form-control" id="author" name="author" value={newScripture.author} onChange={handleInputChange} required />
-            </div>
-            <button type="submit" className="btn btn-primary">Add Scripture</button>
-          </form>
-        </div>
-      </div>
+      
 
       <h2>Existing Scriptures</h2>
       <div className="list-group mb-4">
