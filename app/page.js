@@ -44,7 +44,7 @@ export default function HomePage() {
 
       <div className="container my-5">
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-md-12">
             <h2>Latest Updates</h2>
             <div className="row">
               <div className="col-md-4 mb-4">
@@ -133,39 +133,6 @@ export default function HomePage() {
                       View All Scriptures
                     </Link>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card h-100">
-              <div className="card-body">
-                <h5 className="card-title">Quick Links</h5>
-                <div className="list-group">
-                  <Link
-                    href="/events/calendar"
-                    className="list-group-item list-group-item-action"
-                  >
-                    Event Calendar
-                  </Link>
-                  <Link
-                    href="/appreciation"
-                    className="list-group-item list-group-item-action"
-                  >
-                    Appreciation Wall
-                  </Link>
-                  <Link
-                    href="/prayer"
-                    className="list-group-item list-group-item-action"
-                  >
-                    Prayer Wall
-                  </Link>
-                  <Link
-                    href="/scripture"
-                    className="list-group-item list-group-item-action"
-                  >
-                    Scripture Feed
-                  </Link>
                 </div>
               </div>
             </div>
