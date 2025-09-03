@@ -147,6 +147,7 @@ export default function AdminUsers() {
                   onChange={(e) => handleRoleChange(user.id, e.target.value)}
                 >
                   <option value="USER">USER</option>
+                  <option value="CORE">CORE</option>
                   <option value="ADMIN">ADMIN</option>
                 </select>
                 <button className="btn btn-primary me-2" onClick={() => handleEditClick(user)}>Edit</button>
@@ -179,6 +180,7 @@ export default function AdminUsers() {
                     <label htmlFor="editRole" className="form-label">Role</label>
                     <select className="form-select" id="editRole" name="role" value={editingUser.role} onChange={handleEditInputChange}>
                       <option value="USER">USER</option>
+                      <option value="CORE">CORE</option>
                       <option value="ADMIN">ADMIN</option>
                     </select>
                   </div>

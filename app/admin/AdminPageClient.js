@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import AdminEvents from '@/components/AdminEvents';
 import AdminPrayers from '@/components/AdminPrayers';
 import AdminScriptures from '@/components/AdminScriptures';
 
 export default function AdminPageClient() {
+  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState('events');
 
   return (
@@ -38,9 +40,11 @@ export default function AdminPageClient() {
             Scriptures
           </button>
         </li>
-        <li className="nav-item">
-          <Link href="/admin/users" className="nav-link">Users</Link>
-        </li>
+        {session?.user?.role === 'ADMIN' && (
+          <li className="nav-item">
+            <Link href="/admin/users" className="nav-link">Users</Link>
+          </li>
+        )}
       </ul>
 
       <div>

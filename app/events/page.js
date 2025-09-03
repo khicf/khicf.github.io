@@ -42,16 +42,19 @@ export default function EventsPage() {
           onChange={e => setSearchTerm(e.target.value)}
         />
       </div>
-      <div className="list-group">
+      <div className="row">
         {filteredEvents.length > 0 ? (
           filteredEvents.map(event => (
-            <Link href={`/events/${event.id}`} key={event.id} className="list-group-item list-group-item-action flex-column align-items-start">
-              <div className="d-flex w-100 justify-content-between">
-                <h5 className="mb-1">{event.title}</h5>
-                <small>{event.date}{event.time ? ` at ${event.time}` : ''}</small>
+            <div key={event.id} className="col-md-6 col-lg-4 mb-4">
+              <div className="card h-100">
+                <div className="card-body">
+                  <h5 className="card-title">{event.title}</h5>
+                  <h6 className="card-subtitle mb-2 text-muted">{event.date}{event.time ? ` at ${event.time}` : ''}</h6>
+                  <p className="card-text">{event.description}</p>
+                  <Link href={`/events/${event.id}`} className="btn btn-primary">View Details</Link>
+                </div>
               </div>
-              <p className="mb-1">{event.description}</p>
-            </Link>
+            </div>
           ))
         ) : (
           <p className="text-muted">No events found matching your search.</p>

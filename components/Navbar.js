@@ -33,7 +33,7 @@ export default function Navbar() {
               </li>
             )}
             
-            {session?.user?.role === 'ADMIN' && (
+            {session?.user?.role && ['ADMIN', 'CORE'].includes(session.user.role) && (
               <li className="nav-item">
                 <Link href="/admin" className="nav-link">Admin Panel</Link>
               </li>
@@ -44,6 +44,9 @@ export default function Navbar() {
               <>
                 <li className="nav-item">
                   <span className="nav-link">Welcome, {session.user.name}</span>
+                </li>
+                <li className="nav-item">
+                  <Link href="/profile" className="nav-link">Profile</Link>
                 </li>
                 <li className="nav-item">
                   <button className="btn btn-link nav-link" onClick={() => signOut()}>Logout</button>

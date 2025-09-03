@@ -2,9 +2,15 @@ body {
   background-color: #f8f9fa; /* Light gray background */
   color: #212529; /* Dark text color */
   font-family: var(--font-inter), sans-serif; /* Apply Inter to body */
+  font-size: 0.9rem; /* Reduce default font size */
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-playfair-display), serif; /* Apply Playfair Display to headings */
   color: #343a40; /* Slightly darker heading color */
 }
@@ -30,12 +36,14 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow for navbar */
 }
 
-.navbar-brand, .nav-link {
+.navbar-brand,
+.nav-link {
   color: #343a40 !important; /* Darker text for navbar links */
   font-weight: 500;
 }
 
-.navbar-brand:hover, .nav-link:hover {
+.navbar-brand:hover,
+.nav-link:hover {
   color: #007bff !important; /* Primary color on hover */
 }
 
@@ -44,7 +52,8 @@ h1, h2, h3, h4, h5, h6 {
   border-color: #007bff;
   border-radius: 0.5rem; /* Slightly more rounded buttons */
   padding: 0.6rem 1.2rem; /* More padding for buttons */
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out,
+    transform 0.1s ease-in-out;
 }
 
 .btn-primary:hover {
@@ -96,7 +105,11 @@ textarea.form-control {
 
 /* Jumbotron/Hero Section */
 .p-5.mb-4.bg-light.rounded-3 {
-  background: linear-gradient(135deg, #e0f2f7, #c2e0f0); /* Subtle blue gradient */
+  background: linear-gradient(
+    135deg,
+    #e0f2f7,
+    #c2e0f0
+  ); /* Subtle blue gradient */
   color: #212529;
   border-radius: 1rem !important; /* More rounded hero section */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);

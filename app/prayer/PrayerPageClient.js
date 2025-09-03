@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function PrayerPageClient() {
   const { data: session } = useSession();
@@ -73,97 +74,83 @@ export default function PrayerPageClient() {
 
   return (
     <div>
-      <h1>Prayer Wall</h1>
-      <div className="mb-3">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search prayers..."
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-        />
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h1>Prayer Wall</h1>
+        {session && (
+          <Link href="/prayer/new" className="btn btn-primary">Submit a Prayer Request</Link>
+        )}
       </div>
-      {session && (
-        <div className="card mb-4">
-          <div className="card-body">
-            <h5 className="card-title">Submit a Prayer Request</h5>
-            <form onSubmit={handlePrayerSubmit}>
-              <div className="mb-3">
-                <label htmlFor="request" className="form-label">Request</label>
-                <textarea className="form-control" id="request" rows="3" value={request} onChange={e => setRequest(e.target.value)} required></textarea>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="author" className="form-label">Your Name (Optional)</label>
-                <input type="text" className="form-control" id="author" value={author} onChange={e => setAuthor(e.target.value)} placeholder="A Friend" />
-              </div>
-              <div className="form-check mb-3">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="isPublic"
-                  checked={isPublic}
-                  onChange={e => setIsPublic(e.target.checked)}
-                />
-                <label className="form-check-label" htmlFor="isPublic">
-                  Make this prayer public
-                </label>
-              </div>
-              <button type="submit" className="btn btn-primary">Submit</button>
-            </form>
+      <div className="row">
+        <div className="col-md-12">
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search prayers..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+            />
           </div>
-        </div>
-      )}
+          {filteredPrayers.length > 0 ? (
+            filteredPrayers.map(prayer => (
+              <div key={prayer.id} className={`card mb-3 ${!prayer.isPublic ? 'border-secondary' : ''}`}>
+                <div className="card-body">
+                  <p className="card-text fs-5">{prayer.request}</p>
+                  <footer className="blockquote-footer">{prayer.author || 'Anonymous'} on <cite title="Source Title">{new Date(prayer.date).toLocaleDateString()}</cite></footer>
+                  {!prayer.isPublic && <span className="badge bg-secondary">Private</span>}
 
-      {filteredPrayers.length > 0 ? (
-        filteredPrayers.map(prayer => (
-          <div key={prayer.id} className={`card mb-3 ${!prayer.isPublic ? 'border-secondary' : ''}`}>
-            <div className="card-body">
-              <p className="card-text">{prayer.request}</p>
-              <footer className="blockquote-footer">{prayer.author || 'Anonymous'} on <cite title="Source Title">{new Date(prayer.date).toLocaleDateString()}</cite></footer>
-              {!prayer.isPublic && <span className="badge bg-secondary">Private</span>}
+                  <div className="mt-4">
+                    <h5>Comments</h5>
+                    {prayer.comments && prayer.comments.length > 0 ? (
+                      prayer.comments.map(comment => (
+                        <div key={comment.id} className="d-flex mb-3">
+                          <div className="flex-shrink-0">
+                            <div className="bg-light rounded-circle d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                              <span className="fw-bold">{comment.author.charAt(0)}</span>
+                            </div>
+                          </div>
+                          <div className="ms-3">
+                            <div className="fw-bold">{comment.author}</div>
+                            {comment.text}
+                            <div className="text-muted fs-sm">{new Date(comment.date).toLocaleDateString()}</div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-muted">No comments yet. Be the first to encourage!</p>
+                    )}
 
-              <div className="mt-3">
-                <h6>Comments:</h6>
-                {prayer.comments && prayer.comments.length > 0 ? (
-                  prayer.comments.map(comment => (
-                    <div key={comment.id} className="card card-body bg-light mb-2">
-                      <p className="mb-0">{comment.text}</p>
-                      <small className="text-muted">By {comment.author} on {new Date(comment.date).toLocaleDateString()}</small>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-muted">No comments yet. Be the first to encourage!</p>
-                )}
-
-                {session && (
-                  <div className="mt-3">
-                    <textarea
-                      className="form-control mb-2"
-                      rows="2"
-                      placeholder="Add a comment..."
-                      value={commentText}
-                      onChange={e => setCommentText(e.target.value)}
-                    ></textarea>
-                    <input
-                      type="text"
-                      className="form-control mb-2"
-                      placeholder="Your Name (Optional)"
-                      value={commentAuthor}
-                      onChange={e => setCommentAuthor(e.target.value)}
-                    />
-                    <button
-                      className="btn btn-sm btn-outline-primary"
-                      onClick={() => handleCommentSubmit(prayer.id)}
-                    >Add Comment</button>
+                    {session && (
+                      <div className="mt-3">
+                        <textarea
+                          className="form-control mb-2"
+                          rows="2"
+                          placeholder="Add a comment..."
+                          value={commentText}
+                          onChange={e => setCommentText(e.target.value)}
+                        ></textarea>
+                        <input
+                          type="text"
+                          className="form-control mb-2"
+                          placeholder="Your Name (Optional)"
+                          value={commentAuthor}
+                          onChange={e => setCommentAuthor(e.target.value)}
+                        />
+                        <button
+                          className="btn btn-sm btn-outline-primary"
+                          onClick={() => handleCommentSubmit(prayer.id)}
+                        >Add Comment</button>
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
-            </div>
-          </div>
-        ))
-      ) : (
-        <p className="text-muted">No prayer requests found matching your search.</p>
-      )}
+            ))
+          ) : (
+            <p className="text-muted">No prayer requests found matching your search.</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

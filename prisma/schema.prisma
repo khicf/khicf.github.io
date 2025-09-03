@@ -103,5 +103,6 @@ model Appreciation {
 
 enum Role {
   USER
+  CORE
   ADMIN
 }
