@@ -79,22 +79,54 @@ export default function AppreciationWallPageClient() {
 
   if (session) {
     return (
-      <div>
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h1>Appreciation Wall</h1>
-          <Link href="/appreciation/new" className="btn btn-primary">Post an Appreciation</Link>
-        </div>
-        <div className="col-md-12">
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search appreciations..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-            />
+      <div className="container py-4">
+        {/* Page Hero Section */}
+        <header className="page-hero row align-items-center justify-content-between mb-4 pb-3 border-bottom border-light">
+          <div className="col-md-8">
+            <h1 className="display-6 mb-2 fw-bold">Appreciation Wall</h1>
+            <p className="text-muted mb-0" style={{ fontSize: '1.1rem' }}>
+              Share gratitude and celebrate our community members
+            </p>
           </div>
-          <h2>Recent Appreciations</h2>
+          <div className="col-md-4 text-md-end mt-3 mt-md-0">
+            <Link
+              href="/appreciation/new"
+              className="btn btn-primary"
+              style={{ fontSize: '0.95rem', padding: '0.5rem 1.25rem' }}
+            >
+              Post an Appreciation
+            </Link>
+          </div>
+        </header>
+
+        {/* Controls Bar */}
+        <div className="controls-bar row g-3 align-items-center mb-4">
+          <div className="col-md-8">
+            <div className="position-relative">
+              <input
+                type="text"
+                className="form-control pe-5"
+                placeholder="Search appreciations..."
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                style={{ fontSize: '0.95rem', padding: '0.65rem 1rem' }}
+              />
+              {searchTerm && (
+                <button
+                  className="btn btn-link position-absolute end-0 top-50 translate-middle-y pe-3"
+                  onClick={() => setSearchTerm('')}
+                  aria-label="Clear search"
+                  style={{ zIndex: 5 }}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-12">
+          <h2 className="mb-4">Recent Appreciations</h2>
           {filteredAppreciations.length > 0 ? (
             filteredAppreciations.map((appreciation) => (
               <div key={appreciation.id} className="card mb-3">
@@ -108,7 +140,30 @@ export default function AppreciationWallPageClient() {
               </div>
             ))
           ) : (
-            <p>No appreciations found.</p>
+            <div className="empty-state text-center py-5">
+              <div className="mb-4">
+                <span className="display-1 text-muted">💙</span>
+              </div>
+              <h3 className="text-muted mb-3">No appreciations found</h3>
+              <p className="text-muted mb-4">
+                {searchTerm
+                  ? "Try adjusting your search criteria."
+                  : "Be the first to share gratitude with the community!"}
+              </p>
+              <div className="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+                {searchTerm && (
+                  <button
+                    className="btn btn-outline-secondary"
+                    onClick={() => setSearchTerm('')}
+                  >
+                    Clear Search
+                  </button>
+                )}
+                <Link href="/appreciation/new" className="btn btn-primary">
+                  Post an Appreciation
+                </Link>
+              </div>
+            </div>
           )}
         </div>
       </div>

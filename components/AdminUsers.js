@@ -100,95 +100,223 @@ export default function AdminUsers() {
   };
 
   return (
-    <div>
-      <h2>New User Requests</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {unapprovedUsers.map((user) => (
-            <tr key={user.id}>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>
-                <button className="btn btn-success me-2" onClick={() => handleApprove(user.id)}>Approve</button>
-                <button className="btn btn-danger" onClick={() => handleDeny(user.id)}>Deny</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="container py-4">
+      {/* Page Hero Section */}
+      <header className="page-hero row align-items-center justify-content-between mb-4 pb-3 border-bottom border-light">
+        <div className="col-md-8">
+          <h1 className="display-6 mb-2 fw-bold">User Management</h1>
+          <p className="text-muted mb-0" style={{ fontSize: '1.1rem' }}>
+            Manage user registrations and permissions
+          </p>
+        </div>
+      </header>
 
-      <h2 className="mt-5">Approved Users</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {approvedUsers.map((user) => (
-            <tr key={user.id}>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.role}</td>
-              <td>
-                <select
-                  className="form-select d-inline-block w-auto me-2"
-                  value={user.role}
-                  onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                >
-                  <option value="USER">USER</option>
-                  <option value="CORE">CORE</option>
-                  <option value="ADMIN">ADMIN</option>
-                </select>
-                <button className="btn btn-primary me-2" onClick={() => handleEditClick(user)}>Edit</button>
-                <button className="btn btn-danger" onClick={() => handleDelete(user.id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {editingUser && (
-        <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Edit User</h5>
-                <button type="button" className="btn-close" onClick={() => setEditingUser(null)}></button>
+      {/* New User Requests Section */}
+      <div className="mb-5">
+        <h2 className="mb-4 d-flex align-items-center">
+          <span className="me-2">📋</span>
+          New User Requests
+          {unapprovedUsers.length > 0 && (
+            <span className="badge bg-warning text-dark ms-2">{unapprovedUsers.length}</span>
+          )}
+        </h2>
+        
+        {unapprovedUsers.length > 0 ? (
+          <div className="row">
+            {unapprovedUsers.map((user) => (
+              <div key={user.id} className="col-md-6 col-lg-4 mb-3">
+                <div className="card h-100">
+                  <div className="card-body">
+                    <h5 className="card-title">{user.name}</h5>
+                    <p className="card-text text-muted">{user.email}</p>
+                    <div className="d-flex gap-2">
+                      <button 
+                        className="btn btn-success btn-sm flex-fill"
+                        onClick={() => handleApprove(user.id)}
+                      >
+                        ✓ Approve
+                      </button>
+                      <button 
+                        className="btn btn-danger btn-sm flex-fill"
+                        onClick={() => handleDeny(user.id)}
+                      >
+                        ✕ Deny
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="modal-body">
+            ))}
+          </div>
+        ) : (
+          <div className="empty-state text-center py-4">
+            <div className="mb-3">
+              <span className="display-4 text-muted">✅</span>
+            </div>
+            <h4 className="text-muted mb-2">No pending requests</h4>
+            <p className="text-muted">All user registrations have been processed.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Approved Users Section */}
+      <div>
+        <h2 className="mb-4 d-flex align-items-center">
+          <span className="me-2">👥</span>
+          Approved Users
+          <span className="badge bg-primary ms-2">{approvedUsers.length}</span>
+        </h2>
+
+        {approvedUsers.length > 0 ? (
+          <div className="table-responsive">
+            <table className="table table-hover">
+              <thead className="table-light">
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {approvedUsers.map((user) => (
+                  <tr key={user.id}>
+                    <td className="fw-semibold">{user.name}</td>
+                    <td className="text-muted">{user.email}</td>
+                    <td>
+                      <span className={`badge ${
+                        user.role === 'ADMIN' ? 'bg-danger' :
+                        user.role === 'CORE' ? 'bg-warning text-dark' :
+                        'bg-secondary'
+                      }`}>
+                        {user.role}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="d-flex gap-2 align-items-center">
+                        <select
+                          className="form-select form-select-sm"
+                          style={{ width: 'auto', minWidth: '100px' }}
+                          value={user.role}
+                          onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                          title="Change role"
+                        >
+                          <option value="USER">USER</option>
+                          <option value="CORE">CORE</option>
+                          <option value="ADMIN">ADMIN</option>
+                        </select>
+                        <button 
+                          className="btn btn-outline-primary btn-sm"
+                          onClick={() => handleEditClick(user)}
+                          title="Edit user"
+                        >
+                          ✏️
+                        </button>
+                        <button 
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => handleDelete(user.id)}
+                          title="Delete user"
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="empty-state text-center py-4">
+            <div className="mb-3">
+              <span className="display-4 text-muted">👤</span>
+            </div>
+            <h4 className="text-muted mb-2">No approved users</h4>
+            <p className="text-muted">No users have been approved yet.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Enhanced Edit User Modal */}
+      {editingUser && (
+        <div className="modal-backdrop" onClick={() => setEditingUser(null)}>
+          <div className="modal-dialog modal-dialog-centered" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content" style={{ borderRadius: '12px', border: 'none', boxShadow: '0 16px 32px rgba(0,0,0,0.15)' }}>
+              <div className="modal-header" style={{ background: 'linear-gradient(135deg, #f8f9ff 0%, #fff 100%)', borderBottom: '1px solid #e0e0e0' }}>
+                <h5 className="modal-title fw-bold d-flex align-items-center">
+                  <span className="me-2">✏️</span>
+                  Edit User
+                </h5>
+                <button 
+                  type="button" 
+                  className="btn-close" 
+                  onClick={() => setEditingUser(null)}
+                  style={{ fontSize: '1.2rem' }}
+                ></button>
+              </div>
+              <div className="modal-body" style={{ padding: '2rem' }}>
                 <form>
                   <div className="mb-3">
-                    <label htmlFor="editName" className="form-label">Name</label>
-                    <input type="text" className="form-control" id="editName" name="name" value={editingUser.name} onChange={handleEditInputChange} required />
+                    <label htmlFor="editName" className="form-label fw-semibold">Name</label>
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      id="editName" 
+                      name="name" 
+                      value={editingUser.name} 
+                      onChange={handleEditInputChange} 
+                      required 
+                      style={{ borderRadius: '8px', padding: '0.75rem 1rem' }}
+                    />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="editEmail" className="form-label">Email</label>
-                    <input type="email" className="form-control" id="editEmail" name="email" value={editingUser.email} readOnly disabled />
+                    <label htmlFor="editEmail" className="form-label fw-semibold">Email</label>
+                    <input 
+                      type="email" 
+                      className="form-control" 
+                      id="editEmail" 
+                      name="email" 
+                      value={editingUser.email} 
+                      readOnly 
+                      disabled 
+                      style={{ borderRadius: '8px', padding: '0.75rem 1rem', backgroundColor: '#f8f9fa' }}
+                    />
+                    <small className="text-muted">Email addresses cannot be modified</small>
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="editRole" className="form-label">Role</label>
-                    <select className="form-select" id="editRole" name="role" value={editingUser.role} onChange={handleEditInputChange}>
-                      <option value="USER">USER</option>
-                      <option value="CORE">CORE</option>
-                      <option value="ADMIN">ADMIN</option>
+                    <label htmlFor="editRole" className="form-label fw-semibold">Role</label>
+                    <select 
+                      className="form-select" 
+                      id="editRole" 
+                      name="role" 
+                      value={editingUser.role} 
+                      onChange={handleEditInputChange}
+                      style={{ borderRadius: '8px', padding: '0.75rem 1rem' }}
+                    >
+                      <option value="USER">USER - Standard access</option>
+                      <option value="CORE">CORE - Enhanced permissions</option>
+                      <option value="ADMIN">ADMIN - Full administrative access</option>
                     </select>
                   </div>
                 </form>
               </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setEditingUser(null)}>Close</button>
-                <button type="button" className="btn btn-primary" onClick={handleUpdateUser}>Save changes</button>
+              <div className="modal-footer" style={{ borderTop: '1px solid #e0e0e0', padding: '1.5rem 2rem' }}>
+                <button 
+                  type="button" 
+                  className="btn btn-outline-secondary" 
+                  onClick={() => setEditingUser(null)}
+                  style={{ borderRadius: '6px', padding: '0.5rem 1.5rem' }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-primary" 
+                  onClick={handleUpdateUser}
+                  style={{ borderRadius: '6px', padding: '0.5rem 1.5rem' }}
+                >
+                  💾 Save Changes
+                </button>
               </div>
             </div>
           </div>

@@ -402,3 +402,567 @@ a:focus-visible,
   border-color: #dee2e6;
 }
 
+/* Enhanced nav tabs styling to match overall design */
+.nav-tabs {
+  background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+  border-radius: 8px;
+  padding: 0.5rem;
+  border: 1px solid #e0e0e0;
+}
+
+.nav-tabs .nav-link {
+  border: none;
+  border-radius: 6px;
+  color: #6c757d;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  background-color: rgba(59, 130, 246, 0.05);
+  color: #3b82f6;
+  border: none;
+}
+
+.nav-tabs .nav-link.active {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+  border: none;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+}
+
+/* Home page card hover effects */
+.home-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.home-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Better card header spacing */
+.home-card .card-header {
+  padding: 1.5rem 1.5rem 0;
+}
+
+.home-card .card-body {
+  padding: 0 1.5rem 1rem;
+}
+
+.home-card .card-footer {
+  padding: 0 1.5rem 1.5rem;
+}
+
+/* Icon containers in home cards */
+.home-card .bg-primary.bg-opacity-10,
+.home-card .bg-success.bg-opacity-10,
+.home-card .bg-warning.bg-opacity-10 {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.home-card:hover .bg-primary.bg-opacity-10 {
+  background-color: rgba(13, 110, 253, 0.15) !important;
+  transform: scale(1.1);
+}
+
+.home-card:hover .bg-success.bg-opacity-10 {
+  background-color: rgba(25, 135, 84, 0.15) !important;
+  transform: scale(1.1);
+}
+
+.home-card:hover .bg-warning.bg-opacity-10 {
+  background-color: rgba(255, 193, 7, 0.15) !important;
+  transform: scale(1.1);
+}
+
+/* Home card button styling */
+.home-card .btn {
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.5rem 1.25rem;
+}
+
+.home-card .btn:hover {
+  transform: translateY(-1px);
+}
+
+.home-card .btn-outline-primary:hover {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
+}
+
+.home-card .btn-outline-success:hover {
+  background-color: #198754;
+  border-color: #198754;
+  color: white;
+}
+
+.home-card .btn-outline-warning:hover {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #212529;
+}
+
+/* Content area improvements */
+.home-card .content-area {
+  overflow: hidden;
+}
+
+.home-card .border-bottom {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.home-card .border-bottom:last-child {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Hero section enhancements */
+.hero-section .btn {
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.hero-section .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hero-section .btn-light:hover {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: #495057;
+}
+
+.hero-section .btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.9);
+  color: #495057;
+}
+
+/* Call-to-action section button enhancements */
+.cta-section .btn {
+  transition: all 0.3s ease;
+}
+
+.cta-section .btn:hover {
+  transform: translateY(-2px);
+}
+
+/* React Big Calendar Styling */
+.rbc-calendar {
+  font-family: var(--font-inter), sans-serif;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+.rbc-header {
+  background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 8px;
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.rbc-month-view {
+  border: none;
+}
+
+.rbc-date-cell {
+  padding: 8px 12px;
+  border-right: 1px solid #f1f3f4;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.rbc-date-cell.rbc-off-range {
+  background-color: #fafbfc;
+  color: #9ca3af;
+}
+
+.rbc-date-cell button {
+  font-weight: 500;
+  color: #374151;
+  border: none;
+  background: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.rbc-date-cell.rbc-today button {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+  font-weight: 600;
+}
+
+.rbc-date-cell button:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.rbc-event {
+  background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-size: 0.75rem !important;
+  padding: 2px 6px !important;
+  margin: 1px 2px !important;
+  font-weight: 500 !important;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+  transition: all 0.2s ease !important;
+}
+
+.rbc-event:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3) !important;
+}
+
+.rbc-event.rbc-selected {
+  background: linear-gradient(135deg, #1d4ed8, #4338ca) !important;
+}
+
+.rbc-month-row {
+  border-bottom: 1px solid #f1f3f4;
+  min-height: 80px;
+}
+
+.rbc-day-bg {
+  border-right: 1px solid #f1f3f4;
+}
+
+.rbc-day-bg.rbc-today {
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+.rbc-toolbar {
+  background: white;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 0;
+  border-radius: 8px 8px 0 0;
+}
+
+.rbc-toolbar button {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #6b7280;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.rbc-toolbar button:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+.rbc-toolbar button.rbc-active {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  border-color: #3b82f6;
+  color: white;
+}
+
+.rbc-toolbar-label {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #1f2937;
+  margin: 0 16px;
+}
+
+/* Week and Day view improvements */
+.rbc-time-view {
+  border: none;
+}
+
+.rbc-time-header {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.rbc-time-content {
+  border-top: none;
+}
+
+.rbc-time-slot {
+  border-top: 1px solid #f1f3f4;
+}
+
+.rbc-timeslot-group {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.rbc-day-slot .rbc-event {
+  border-left: 3px solid #6366f1 !important;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1)) !important;
+  color: #1f2937 !important;
+}
+
+/* Popup styling */
+.rbc-overlay {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.rbc-overlay-header {
+  background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 16px;
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Prayer Wall Enhancements */
+.prayer-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.prayer-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #10b981, #059669);
+  opacity: 0.7;
+}
+
+.prayer-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.prayer-card.private-prayer::before {
+  background: linear-gradient(90deg, #6b7280, #4b5563);
+}
+
+.prayer-card .author-avatar {
+  transition: transform 0.2s ease;
+}
+
+.prayer-card:hover .author-avatar {
+  transform: scale(1.05);
+}
+
+/* Prayer content styling */
+.prayer-content blockquote {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.prayer-content blockquote::before {
+  content: '"';
+  position: absolute;
+  left: 0;
+  top: -0.2rem;
+  font-size: 2rem;
+  color: rgba(16, 185, 129, 0.2);
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+/* Comments section styling */
+.comments-section {
+  border-top: 1px solid #f1f3f4;
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.comment-item {
+  transition: all 0.2s ease;
+}
+
+.comment-item:hover {
+  background-color: #f1f5f9 !important;
+  transform: translateX(4px);
+}
+
+.comment-avatar .bg-success.bg-opacity-10 {
+  transition: all 0.2s ease;
+}
+
+.comment-item:hover .comment-avatar .bg-success.bg-opacity-10 {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  transform: scale(1.1);
+}
+
+/* Add comment section styling */
+.add-comment-section {
+  transition: all 0.2s ease;
+}
+
+.add-comment-section:hover {
+  background-color: #e0f2fe !important;
+  border-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+.add-comment-section .form-control:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.add-comment-section .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* No comments state */
+.no-comments {
+  transition: all 0.2s ease;
+}
+
+.no-comments:hover {
+  background-color: #f0f9ff !important;
+}
+
+/* Enhanced empty state for Prayer Wall */
+.prayer-wall-empty {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 2px dashed rgba(16, 185, 129, 0.2);
+}
+
+/* Responsive improvements for prayer cards */
+@media (max-width: 768px) {
+  .prayer-card .card-body {
+    padding: 1.5rem;
+  }
+  
+  .prayer-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .prayer-header .prayer-meta {
+    margin-bottom: 1rem;
+  }
+  
+  .add-comment-section .row {
+    flex-direction: column;
+  }
+  
+  .add-comment-section .btn {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Admin Components Enhancements */
+.admin-events .event-admin-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-events .event-admin-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+  opacity: 0.7;
+}
+
+.admin-events .event-admin-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.admin-events .event-admin-card:hover::before {
+  opacity: 1;
+  height: 4px;
+}
+
+.admin-events .event-actions .btn {
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.admin-events .event-actions .btn:hover {
+  transform: translateY(-1px);
+}
+
+.admin-events .alert {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Page Enhancements */
+.user-avatar {
+  transition: all 0.3s ease;
+}
+
+.user-avatar:hover {
+  transform: scale(1.05);
+  background-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+.password-requirements {
+  transition: all 0.2s ease;
+}
+
+.password-requirements:hover {
+  background-color: #e0f2fe !important;
+  border-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Enhanced form controls for profile */
+.card .form-control:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.card .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Admin empty states */
+.admin-events .empty-state {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 12px;
+  border: 2px dashed rgba(59, 130, 246, 0.2);
+}
+
+/* Responsive improvements for admin cards */
+@media (max-width: 768px) {
+  .admin-events .event-admin-card .card-body {
+    padding: 1.5rem;
+  }
+  
+  .admin-events .event-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .admin-events .event-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .admin-events .event-actions .btn {
+    width: 100%;
+  }
+}
+

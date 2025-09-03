@@ -107,12 +107,25 @@ export default function AdminEvents() {
   };
 
   return (
-    <div>
-      {message && <div className="alert alert-info">{message}</div>}
+    <div className="admin-events">
+      {message && (
+        <div className={`alert ${message.includes('Error') ? 'alert-danger' : 'alert-success'} alert-dismissible fade show`} role="alert">
+          <strong>{message.includes('Error') ? '❌ Error:' : '✅ Success:'}</strong> {message}
+          <button type="button" className="btn-close" onClick={() => setMessage('')}></button>
+        </div>
+      )}
 
-      <div className="card mb-4">
-        <div className="card-body">
-          <h5 className="card-title">Add New Event</h5>
+      {/* Add Event Form */}
+      <div className="card mb-4 border-0 shadow-sm" style={{ borderRadius: '12px' }}>
+        <div className="card-header bg-transparent border-0 pt-4 pb-0">
+          <h5 className="card-title fw-bold d-flex align-items-center mb-3">
+            <span className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+              <span style={{ fontSize: '1.2rem' }}>📅</span>
+            </span>
+            Add New Event
+          </h5>
+        </div>
+        <div className="card-body pt-2">
           <form onSubmit={handleAddEvent}>
             <div className="mb-3">
               <label htmlFor="title" className="form-label">Title</label>
@@ -146,29 +159,101 @@ export default function AdminEvents() {
               <input type="checkbox" className="form-check-input" id="isPublic" name="isPublic" checked={newEvent.isPublic} onChange={handleInputChange} />
               <label className="form-check-label" htmlFor="isPublic">Public Event</label>
             </div>
-            <button type="submit" className="btn btn-primary">Add Event</button>
+            <button type="submit" className="btn btn-primary" style={{ borderRadius: '8px', padding: '0.5rem 2rem' }}>
+              📅 Add Event
+            </button>
           </form>
         </div>
       </div>
 
-      <h2>Existing Events</h2>
-      <div className="list-group mb-4">
+      {/* Events List */}
+      <div className="events-list">
+        <div className="d-flex align-items-center justify-content-between mb-4">
+          <h2 className="mb-0 fw-bold d-flex align-items-center">
+            <span className="me-2">📋</span>
+            Existing Events
+            {events.length > 0 && (
+              <span className="badge bg-primary ms-2">{events.length}</span>
+            )}
+          </h2>
+        </div>
+
         {events.length > 0 ? (
-          events.map(event => (
-            <div key={event.id} className="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <h5>{event.title}</h5>
-                <p><small>{event.date}{event.time ? ` at ${event.time}` : ''} - {event.location}</small></p>
-                <p>{event.description}</p>
+          <div className="row g-3">
+            {events.map(event => (
+              <div key={event.id} className="col-lg-6 col-xl-4">
+                <div className="event-admin-card card border-0 shadow-sm h-100" style={{ borderRadius: '12px' }}>
+                  <div className="card-body p-4">
+                    <div className="event-header mb-3">
+                      <div className="d-flex align-items-start justify-content-between">
+                        <div className="flex-grow-1">
+                          <h5 className="fw-bold text-dark mb-1">{event.title}</h5>
+                          <div className="event-meta text-muted small mb-2">
+                            <div className="d-flex align-items-center mb-1">
+                              <span className="me-2">📅</span>
+                              <span>{new Date(event.date).toLocaleDateString('en-US', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                              })}</span>
+                              {event.time && <span className="ms-2">at {event.time}</span>}
+                            </div>
+                            {event.location && (
+                              <div className="d-flex align-items-center">
+                                <span className="me-2">📍</span>
+                                <span>{event.location}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        {!event.isPublic && (
+                          <span className="badge bg-secondary bg-opacity-20 text-secondary px-2 py-1" style={{ borderRadius: '20px', fontSize: '0.75rem' }}>
+                            🔒 Private
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="event-description mb-3">
+                      <p className="text-muted mb-0" style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }}>
+                        {event.description}
+                      </p>
+                    </div>
+
+                    <div className="event-actions d-flex gap-2">
+                      <button 
+                        className="btn btn-outline-primary btn-sm flex-fill"
+                        onClick={() => handleEditClick(event)}
+                        style={{ borderRadius: '6px' }}
+                      >
+                        ✏️ Edit
+                      </button>
+                      <button 
+                        className="btn btn-outline-danger btn-sm flex-fill"
+                        onClick={() => handleDeleteEvent(event.id)}
+                        style={{ borderRadius: '6px' }}
+                      >
+                        🗑️ Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div>
-                <button className="btn btn-sm btn-warning me-2" onClick={() => handleEditClick(event)}>Edit</button>
-                <button className="btn btn-sm btn-danger" onClick={() => handleDeleteEvent(event.id)}>Delete</button>
-              </div>
-            </div>
-          ))
+            ))}
+          </div>
         ) : (
-          <p>No events found.</p>
+          <div className="empty-state text-center py-5">
+            <div className="mb-4">
+              <span className="display-1 text-muted">📅</span>
+            </div>
+            <h4 className="text-muted mb-3">No events created yet</h4>
+            <p className="text-muted">Start by adding your first community event above.</p>
+          </div>
         )}
       </div>
 

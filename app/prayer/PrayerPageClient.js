@@ -73,81 +73,222 @@ export default function PrayerPageClient() {
   };
 
   return (
-    <div>
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h1>Prayer Wall</h1>
-        {session && (
-          <Link href="/prayer/new" className="btn btn-primary">Submit a Prayer Request</Link>
-        )}
-      </div>
-      <div className="row">
-        <div className="col-md-12">
-          <div className="mb-3">
+    <div className="container py-4">
+      {/* Page Hero Section */}
+      <header className="page-hero row align-items-center justify-content-between mb-4 pb-3 border-bottom border-light">
+        <div className="col-md-8">
+          <h1 className="display-6 mb-2 fw-bold">Prayer Wall</h1>
+          <p className="text-muted mb-0" style={{ fontSize: '1.1rem' }}>
+            Share your requests and encourage one another in prayer
+          </p>
+        </div>
+        <div className="col-md-4 text-md-end mt-3 mt-md-0">
+          {session && (
+            <Link
+              href="/prayer/new"
+              className="btn btn-primary"
+              style={{ fontSize: '0.95rem', padding: '0.5rem 1.25rem' }}
+            >
+              Submit Prayer Request
+            </Link>
+          )}
+        </div>
+      </header>
+
+      {/* Controls Bar */}
+      <div className="controls-bar row g-3 align-items-center mb-4">
+        <div className="col-md-8">
+          <div className="position-relative">
             <input
               type="text"
-              className="form-control"
+              className="form-control pe-5"
               placeholder="Search prayers..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
+              style={{ fontSize: '0.95rem', padding: '0.65rem 1rem' }}
             />
+            {searchTerm && (
+              <button
+                className="btn btn-link position-absolute end-0 top-50 translate-middle-y pe-3"
+                onClick={() => setSearchTerm('')}
+                aria-label="Clear search"
+                style={{ zIndex: 5 }}
+              >
+                ✕
+              </button>
+            )}
           </div>
+        </div>
+      </div>
+
+      {/* Prayer Cards */}
+      <div className="row">
+        <div className="col-md-12">
           {filteredPrayers.length > 0 ? (
             filteredPrayers.map(prayer => (
-              <div key={prayer.id} className={`card mb-3 ${!prayer.isPublic ? 'border-secondary' : ''}`}>
-                <div className="card-body">
-                  <p className="card-text fs-5">{prayer.request}</p>
-                  <footer className="blockquote-footer">{prayer.author || 'Anonymous'} on <cite title="Source Title">{new Date(prayer.date).toLocaleDateString()}</cite></footer>
-                  {!prayer.isPublic && <span className="badge bg-secondary">Private</span>}
+              <article key={prayer.id} className={`prayer-card card mb-4 border-0 shadow-sm ${!prayer.isPublic ? 'private-prayer' : ''}`} style={{ borderRadius: '12px' }}>
+                <div className="card-body p-4">
+                  {/* Prayer Header */}
+                  <div className="prayer-header mb-3 d-flex align-items-start justify-content-between">
+                    <div className="prayer-meta d-flex align-items-center">
+                      <div className="author-avatar me-3">
+                        <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style={{ width: '48px', height: '48px' }}>
+                          <span className="fw-bold text-primary" style={{ fontSize: '1.2rem' }}>
+                            {(prayer.author || 'Anonymous').charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="fw-semibold text-dark">{prayer.author || 'Anonymous'}</div>
+                        <div className="text-muted small">
+                          <time dateTime={prayer.date}>
+                            {new Date(prayer.date).toLocaleDateString('en-US', { 
+                              year: 'numeric', 
+                              month: 'long', 
+                              day: 'numeric' 
+                            })}
+                          </time>
+                        </div>
+                      </div>
+                    </div>
+                    {!prayer.isPublic && (
+                      <span className="badge bg-secondary bg-opacity-20 text-secondary px-3 py-2" style={{ borderRadius: '20px' }}>
+                        🔒 Private
+                      </span>
+                    )}
+                  </div>
 
-                  <div className="mt-4">
-                    <h5>Comments</h5>
+                  {/* Prayer Content */}
+                  <div className="prayer-content mb-4">
+                    <blockquote className="mb-0">
+                      <p className="fs-5 lh-base text-dark mb-0" style={{ fontStyle: 'italic' }}>
+                        "{prayer.request}"
+                      </p>
+                    </blockquote>
+                  </div>
+
+                  {/* Comments Section */}
+                  <div className="comments-section">
+                    <div className="comments-header d-flex align-items-center justify-content-between mb-3">
+                      <h6 className="mb-0 fw-bold text-muted d-flex align-items-center">
+                        💬 Comments
+                        {prayer.comments && prayer.comments.length > 0 && (
+                          <span className="badge bg-light text-muted ms-2">{prayer.comments.length}</span>
+                        )}
+                      </h6>
+                    </div>
                     {prayer.comments && prayer.comments.length > 0 ? (
-                      prayer.comments.map(comment => (
-                        <div key={comment.id} className="d-flex mb-3">
-                          <div className="flex-shrink-0">
-                            <div className="bg-light rounded-circle d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-                              <span className="fw-bold">{comment.author.charAt(0)}</span>
+                      <div className="comments-list">
+                        {prayer.comments.map(comment => (
+                          <div key={comment.id} className="comment-item d-flex mb-3 p-3" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+                            <div className="comment-avatar flex-shrink-0 me-3">
+                              <div className="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style={{ width: '36px', height: '36px' }}>
+                                <span className="fw-bold text-success" style={{ fontSize: '0.9rem' }}>
+                                  {comment.author.charAt(0).toUpperCase()}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="comment-content flex-grow-1">
+                              <div className="comment-header d-flex align-items-center justify-content-between mb-2">
+                                <span className="fw-semibold text-dark">{comment.author}</span>
+                                <time className="text-muted small" dateTime={comment.date}>
+                                  {new Date(comment.date).toLocaleDateString('en-US', { 
+                                    month: 'short', 
+                                    day: 'numeric' 
+                                  })}
+                                </time>
+                              </div>
+                              <div className="comment-text text-dark">
+                                {comment.text}
+                              </div>
                             </div>
                           </div>
-                          <div className="ms-3">
-                            <div className="fw-bold">{comment.author}</div>
-                            {comment.text}
-                            <div className="text-muted fs-sm">{new Date(comment.date).toLocaleDateString()}</div>
-                          </div>
-                        </div>
-                      ))
+                        ))}
+                      </div>
                     ) : (
-                      <p className="text-muted">No comments yet. Be the first to encourage!</p>
+                      <div className="no-comments text-center py-4" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+                        <div className="text-muted mb-2" style={{ fontSize: '2rem' }}>💝</div>
+                        <p className="text-muted mb-0">No encouragements yet. Be the first to uplift this prayer!</p>
+                      </div>
                     )}
 
                     {session && (
-                      <div className="mt-3">
-                        <textarea
-                          className="form-control mb-2"
-                          rows="2"
-                          placeholder="Add a comment..."
-                          value={commentText}
-                          onChange={e => setCommentText(e.target.value)}
-                        ></textarea>
-                        <input
-                          type="text"
-                          className="form-control mb-2"
-                          placeholder="Your Name (Optional)"
-                          value={commentAuthor}
-                          onChange={e => setCommentAuthor(e.target.value)}
-                        />
-                        <button
-                          className="btn btn-sm btn-outline-primary"
-                          onClick={() => handleCommentSubmit(prayer.id)}
-                        >Add Comment</button>
+                      <div className="add-comment-section mt-4 p-3" style={{ backgroundColor: '#f0f9ff', borderRadius: '8px', border: '1px solid rgba(59, 130, 246, 0.1)' }}>
+                        <h6 className="fw-bold text-primary mb-3">💝 Add Encouragement</h6>
+                        <div className="mb-3">
+                          <textarea
+                            className="form-control border-0"
+                            rows="3"
+                            placeholder="Share words of encouragement, support, or let them know you're praying for them..."
+                            value={commentText}
+                            onChange={e => setCommentText(e.target.value)}
+                            style={{ 
+                              backgroundColor: 'white', 
+                              borderRadius: '8px',
+                              fontSize: '0.95rem',
+                              resize: 'none'
+                            }}
+                          />
+                        </div>
+                        <div className="row g-2 align-items-end">
+                          <div className="col-md-8">
+                            <input
+                              type="text"
+                              className="form-control border-0"
+                              placeholder="Your name (optional)"
+                              value={commentAuthor}
+                              onChange={e => setCommentAuthor(e.target.value)}
+                              style={{ 
+                                backgroundColor: 'white', 
+                                borderRadius: '8px',
+                                fontSize: '0.9rem'
+                              }}
+                            />
+                          </div>
+                          <div className="col-md-4">
+                            <button
+                              className="btn btn-primary w-100"
+                              onClick={() => handleCommentSubmit(prayer.id)}
+                              disabled={!commentText.trim()}
+                              style={{ borderRadius: '8px', fontWeight: '500' }}
+                            >
+                              🙏 Encourage
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
                 </div>
-              </div>
+              </article>
             ))
           ) : (
-            <p className="text-muted">No prayer requests found matching your search.</p>
+            <div className="empty-state text-center py-5">
+              <div className="mb-4">
+                <span className="display-1 text-muted">🙏</span>
+              </div>
+              <h3 className="text-muted mb-3">No prayer requests found</h3>
+              <p className="text-muted mb-4">
+                {searchTerm
+                  ? "Try adjusting your search criteria."
+                  : "Be the first to share a prayer request with the community!"}
+              </p>
+              <div className="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+                {searchTerm && (
+                  <button
+                    className="btn btn-outline-secondary"
+                    onClick={() => setSearchTerm('')}
+                  >
+                    Clear Search
+                  </button>
+                )}
+                {session && (
+                  <Link href="/prayer/new" className="btn btn-primary">
+                    Submit Prayer Request
+                  </Link>
+                )}
+              </div>
+            </div>
           )}
         </div>
       </div>
