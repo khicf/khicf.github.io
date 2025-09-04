@@ -248,9 +248,29 @@ export default function AdminUsers() {
 
       {/* Enhanced Edit User Modal */}
       {editingUser && (
-        <div className="modal-backdrop" onClick={() => setEditingUser(null)}>
+        <div 
+          className="modal-backdrop"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1050
+          }}
+          onClick={() => setEditingUser(null)}
+        >
           <div
             className="modal-dialog modal-dialog-centered"
+            style={{
+              width: '100%',
+              maxWidth: '500px',
+              margin: '1.75rem auto'
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <div
@@ -259,6 +279,7 @@ export default function AdminUsers() {
                 borderRadius: "12px",
                 border: "none",
                 boxShadow: "0 16px 32px rgba(0,0,0,0.15)",
+                backgroundColor: "#ffffff",
               }}
             >
               <div
@@ -268,7 +289,7 @@ export default function AdminUsers() {
                   borderBottom: "1px solid #e0e0e0",
                 }}
               >
-                <h5 className="modal-title fw-bold d-flex align-items-center">
+                <h5 className="modal-title fw-bold d-flex align-items-center" style={{ paddingLeft: "0.5rem" }}>
                   Edit User
                 </h5>
                 <button
