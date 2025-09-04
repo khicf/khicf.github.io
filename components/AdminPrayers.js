@@ -116,10 +116,11 @@ export default function AdminPrayers() {
                               <span>By {prayer.author || 'Anonymous'}</span>
                             </div>
                             <div className="d-flex align-items-center">
-                              <span>{new Date(prayer.date).toLocaleDateString('en-US', { 
+                              <span>{new Date(prayer.date + 'T00:00:00').toLocaleDateString('en-US', { 
                                 year: 'numeric', 
                                 month: 'long', 
-                                day: 'numeric' 
+                                day: 'numeric',
+                                timeZone: 'America/Chicago'
                               })}</span>
                             </div>
                           </div>

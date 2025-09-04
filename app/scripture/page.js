@@ -297,7 +297,9 @@ export default function ScripturePage() {
                   <footer className="card-footer">
                     <div>
                       <div className="reference">— {getHighlightedText(scripture.reference, searchTerm)}</div>
-                      <div className="meta">Shared by {getHighlightedText(scripture.author, searchTerm)} on {new Date(scripture.date).toLocaleDateString()}</div>
+                      <div className="meta">Shared by {getHighlightedText(scripture.author, searchTerm)} on {new Date(scripture.date + 'T00:00:00').toLocaleDateString('en-US', {
+                        timeZone: 'America/Chicago'
+                      })}</div>
                     </div>
                     <Link href={`/scripture/${scripture.id}`} className="read-link">Read</Link>
                   </footer>

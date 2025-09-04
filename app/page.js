@@ -232,7 +232,9 @@ export default function HomePage() {
                           </h6>
                           <p className="text-muted small mb-0">
                             By {prayer.author || "Anonymous"} •{" "}
-                            {new Date(prayer.date).toLocaleDateString()}
+                            {new Date(prayer.date + 'T00:00:00').toLocaleDateString('en-US', {
+                              timeZone: 'America/Chicago'
+                            })}
                           </p>
                         </div>
                       ))}
@@ -297,7 +299,9 @@ export default function HomePage() {
                             </h6>
                             <p className="text-muted small mb-0">
                               By {scripture.author} •{" "}
-                              {new Date(scripture.date).toLocaleDateString()}
+                              {new Date(scripture.date + 'T00:00:00').toLocaleDateString('en-US', {
+                                timeZone: 'America/Chicago'
+                              })}
                             </p>
                           </Link>
                         </div>

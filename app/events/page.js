@@ -81,9 +81,75 @@ export default function EventsPage() {
               <div className="card h-100">
                 <div className="card-body">
                   <h5 className="card-title">{event.title}</h5>
-                  <h6 className="card-subtitle mb-2 text-muted">
-                    {event.date}
-                    {event.time ? ` at ${event.time}` : ""}
+                  <h6 className="card-subtitle mb-2 text-muted" style={{ 
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word',
+                    lineHeight: '1.3'
+                  }}>
+                    {/* Smart date display for multi-day events */}
+                    {event.startDate && event.endDate ? (
+                      event.startDate === event.endDate ? (
+                        // Single day event with new fields
+                        <>
+                          {new Date(event.startDate + 'T00:00:00').toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            timeZone: 'America/Chicago'
+                          })}
+                          {event.isWholeDayEvent ? (
+                            <span className="badge bg-info ms-2">All Day</span>
+                          ) : event.startTime && event.endTime ? (
+                            ` • ${event.startTime} - ${event.endTime}`
+                          ) : event.startTime ? (
+                            ` at ${event.startTime}`
+                          ) : ""}
+                        </>
+                      ) : (
+                        // Multi-day event
+                        <>
+                          <span className="d-block d-sm-inline">
+                            {new Date(event.startDate + 'T00:00:00').toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              timeZone: 'America/Chicago'
+                            })} - {new Date(event.endDate + 'T00:00:00').toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                              timeZone: 'America/Chicago'
+                            })}
+                          </span>
+                          <br className="d-sm-none" />
+                          <span className="badge bg-success ms-2 mt-1 mt-sm-0">Multi-Day</span>
+                        </>
+                      )
+                    ) : event.startDate ? (
+                      // Single start date only
+                      <>
+                        {new Date(event.startDate + 'T00:00:00').toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          timeZone: 'America/Chicago'
+                        })}
+                        {event.startTime ? ` at ${event.startTime}` : ""}
+                      </>
+                    ) : (
+                      // Legacy date field
+                      <>
+                        {new Date(event.date + 'T00:00:00').toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          timeZone: 'America/Chicago'
+                        })}
+                        {event.time ? ` at ${event.time}` : ""}
+                      </>
+                    )}
                   </h6>
                   <p className="card-text">{event.description}</p>
                   <Link

@@ -306,7 +306,9 @@ export default function AppreciationWallPageClient() {
                         From: {appreciation.user.name}
                       </small>
                       <small className="text-muted">
-                        {new Date(appreciation.createdAt).toLocaleDateString()}
+                        {new Date(appreciation.createdAt).toLocaleDateString('en-US', {
+                          timeZone: 'America/Chicago'
+                        })}
                       </small>
                     </div>
                   )}

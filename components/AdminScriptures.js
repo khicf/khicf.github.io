@@ -102,10 +102,11 @@ export default function AdminScriptures() {
                               <span>By {scripture.author}</span>
                             </div>
                             <div className="d-flex align-items-center">
-                              <span>{new Date(scripture.date).toLocaleDateString('en-US', { 
+                              <span>{new Date(scripture.date + 'T00:00:00').toLocaleDateString('en-US', { 
                                 year: 'numeric', 
                                 month: 'long', 
-                                day: 'numeric' 
+                                day: 'numeric',
+                                timeZone: 'America/Chicago'
                               })}</span>
                             </div>
                           </div>

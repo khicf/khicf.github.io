@@ -7,12 +7,17 @@ export default function AdminEvents() {
   const [newEvent, setNewEvent] = useState({
     title: '',
     date: '',
+    startDate: '',
+    endDate: '',
     time: '',
+    startTime: '',
+    endTime: '',
     description: '',
     location: '',
     contact: '',
     fullDescription: '',
     isPublic: true,
+    isWholeDayEvent: false,
   });
   const [editingEvent, setEditingEvent] = useState(null); // State to hold event being edited
   const [message, setMessage] = useState('');
@@ -34,7 +39,19 @@ export default function AdminEvents() {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setNewEvent({ ...newEvent, [name]: type === 'checkbox' ? checked : value });
+    
+    if (name === 'isWholeDayEvent' && checked) {
+      // Clear time fields when whole day event is selected
+      setNewEvent({ 
+        ...newEvent, 
+        [name]: true,
+        time: '',
+        startTime: '',
+        endTime: ''
+      });
+    } else {
+      setNewEvent({ ...newEvent, [name]: type === 'checkbox' ? checked : value });
+    }
   };
 
   const handleAddEvent = async (e) => {
@@ -50,12 +67,17 @@ export default function AdminEvents() {
       setNewEvent({
         title: '',
         date: '',
+        startDate: '',
+        endDate: '',
         time: '',
+        startTime: '',
+        endTime: '',
         description: '',
         location: '',
         contact: '',
         fullDescription: '',
         isPublic: true,
+        isWholeDayEvent: false,
       });
       fetchEvents(); // Refresh the list
     } catch (err) {
@@ -69,7 +91,19 @@ export default function AdminEvents() {
 
   const handleEditInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setEditingEvent({ ...editingEvent, [name]: type === 'checkbox' ? checked : value });
+    
+    if (name === 'isWholeDayEvent' && checked) {
+      // Clear time fields when whole day event is selected
+      setEditingEvent({ 
+        ...editingEvent, 
+        [name]: true,
+        time: '',
+        startTime: '',
+        endTime: ''
+      });
+    } else {
+      setEditingEvent({ ...editingEvent, [name]: type === 'checkbox' ? checked : value });
+    }
   };
 
   const handleUpdateEvent = async (e) => {
@@ -129,12 +163,76 @@ export default function AdminEvents() {
               <input type="text" className="form-control" id="title" name="title" value={newEvent.title} onChange={handleInputChange} required />
             </div>
             <div className="mb-3">
-              <label htmlFor="date" className="form-label">Date</label>
-              <input type="date" className="form-control" id="date" name="date" value={newEvent.date} onChange={handleInputChange} required />
+              <label htmlFor="date" className="form-label">Date (Legacy - for single day events)</label>
+              <input type="date" className="form-control" id="date" name="date" value={newEvent.date} onChange={handleInputChange} />
+            </div>
+            <div className="row mb-3">
+              <div className="col-md-6">
+                <label htmlFor="startDate" className="form-label">Start Date</label>
+                <input type="date" className="form-control" id="startDate" name="startDate" value={newEvent.startDate} onChange={handleInputChange} />
+              </div>
+              <div className="col-md-6">
+                <label htmlFor="endDate" className="form-label">End Date</label>
+                <input type="date" className="form-control" id="endDate" name="endDate" value={newEvent.endDate} onChange={handleInputChange} />
+              </div>
+            </div>
+            <div className="alert alert-info small" role="alert">
+              <strong>Date Options:</strong> Use either the legacy "Date" field for single-day events, or use "Start Date" and "End Date" for multi-day events or better calendar control.
             </div>
             <div className="mb-3">
-              <label htmlFor="time" className="form-label">Time</label>
-              <input type="text" className="form-control" id="time" name="time" value={newEvent.time} onChange={handleInputChange} placeholder="e.g., 7:00 PM" />
+              <label htmlFor="time" className="form-label">Time (Legacy - for single events)</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                id="time" 
+                name="time" 
+                value={newEvent.time} 
+                onChange={handleInputChange} 
+                placeholder="e.g., 7:00 PM"
+                disabled={newEvent.isWholeDayEvent}
+              />
+            </div>
+            <div className="row mb-3">
+              <div className="col-md-6">
+                <label htmlFor="startTime" className="form-label">Start Time</label>
+                <input 
+                  type="time" 
+                  className="form-control" 
+                  id="startTime" 
+                  name="startTime" 
+                  value={newEvent.startTime} 
+                  onChange={handleInputChange}
+                  disabled={newEvent.isWholeDayEvent}
+                />
+              </div>
+              <div className="col-md-6">
+                <label htmlFor="endTime" className="form-label">End Time</label>
+                <input 
+                  type="time" 
+                  className="form-control" 
+                  id="endTime" 
+                  name="endTime" 
+                  value={newEvent.endTime} 
+                  onChange={handleInputChange}
+                  disabled={newEvent.isWholeDayEvent}
+                />
+              </div>
+            </div>
+            <div className="mb-3 form-check">
+              <input 
+                type="checkbox" 
+                className="form-check-input" 
+                id="isWholeDayEvent" 
+                name="isWholeDayEvent" 
+                checked={newEvent.isWholeDayEvent} 
+                onChange={handleInputChange} 
+              />
+              <label className="form-check-label" htmlFor="isWholeDayEvent">
+                <strong>Whole Day Event</strong> - Event runs all day without specific times
+              </label>
+            </div>
+            <div className="alert alert-warning small" role="alert">
+              <strong>Time Options:</strong> Check "Whole Day Event" for all-day events, or use specific start/end times. Legacy time field is available for backward compatibility.
             </div>
             <div className="mb-3">
               <label htmlFor="description" className="form-label">Short Description</label>
@@ -185,13 +283,53 @@ export default function AdminEvents() {
                         <div className="flex-grow-1">
                           <h5 className="fw-bold text-dark mb-1">{event.title}</h5>
                           <div className="event-meta text-muted small mb-2">
-                            <div className="d-flex align-items-center mb-1">
-                              <span>{new Date(event.date).toLocaleDateString('en-US', { 
-                                year: 'numeric', 
-                                month: 'long', 
-                                day: 'numeric' 
-                              })}</span>
-                              {event.time && <span className="ms-2">at {event.time}</span>}
+                            <div className="d-flex align-items-center mb-1" style={{
+                              flexWrap: 'wrap',
+                              wordBreak: 'break-word',
+                              lineHeight: '1.4'
+                            }}>
+                              {event.startDate && event.endDate ? (
+                                <span>
+                                  {new Date(event.startDate + 'T00:00:00').toLocaleDateString('en-US', { 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric',
+                                    timeZone: 'America/Chicago'
+                                  })}
+                                  {event.startDate !== event.endDate && (
+                                    <span> - {new Date(event.endDate + 'T00:00:00').toLocaleDateString('en-US', { 
+                                      year: 'numeric', 
+                                      month: 'long', 
+                                      day: 'numeric',
+                                      timeZone: 'America/Chicago'
+                                    })}</span>
+                                  )}
+                                </span>
+                              ) : event.startDate ? (
+                                <span>{new Date(event.startDate + 'T00:00:00').toLocaleDateString('en-US', { 
+                                  year: 'numeric', 
+                                  month: 'long', 
+                                  day: 'numeric',
+                                  timeZone: 'America/Chicago'
+                                })}</span>
+                              ) : (
+                                <span>{new Date(event.date + 'T00:00:00').toLocaleDateString('en-US', { 
+                                  year: 'numeric', 
+                                  month: 'long', 
+                                  day: 'numeric',
+                                  timeZone: 'America/Chicago'
+                                })}</span>
+                              )}
+                              {/* Show time information */}
+                              {event.startTime && event.endTime ? (
+                                <span className="ms-2">
+                                  {event.startTime} - {event.endTime}
+                                </span>
+                              ) : event.startTime ? (
+                                <span className="ms-2">at {event.startTime}</span>
+                              ) : event.time ? (
+                                <span className="ms-2">at {event.time}</span>
+                              ) : null}
                             </div>
                             {event.location && (
                               <div className="d-flex align-items-center">
@@ -266,12 +404,70 @@ export default function AdminEvents() {
                     <input type="text" className="form-control" id="editTitle" name="title" value={editingEvent.title} onChange={handleEditInputChange} required />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="editDate" className="form-label">Date</label>
-                    <input type="date" className="form-control" id="editDate" name="date" value={editingEvent.date} onChange={handleEditInputChange} required />
+                    <label htmlFor="editDate" className="form-label">Date (Legacy)</label>
+                    <input type="date" className="form-control" id="editDate" name="date" value={editingEvent.date} onChange={handleEditInputChange} />
+                  </div>
+                  <div className="row mb-3">
+                    <div className="col-md-6">
+                      <label htmlFor="editStartDate" className="form-label">Start Date</label>
+                      <input type="date" className="form-control" id="editStartDate" name="startDate" value={editingEvent.startDate || ''} onChange={handleEditInputChange} />
+                    </div>
+                    <div className="col-md-6">
+                      <label htmlFor="editEndDate" className="form-label">End Date</label>
+                      <input type="date" className="form-control" id="editEndDate" name="endDate" value={editingEvent.endDate || ''} onChange={handleEditInputChange} />
+                    </div>
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="editTime" className="form-label">Time</label>
-                    <input type="text" className="form-control" id="editTime" name="time" value={editingEvent.time} onChange={handleEditInputChange} placeholder="e.g., 7:00 PM" />
+                    <label htmlFor="editTime" className="form-label">Time (Legacy)</label>
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      id="editTime" 
+                      name="time" 
+                      value={editingEvent.time || ''} 
+                      onChange={handleEditInputChange} 
+                      placeholder="e.g., 7:00 PM"
+                      disabled={editingEvent.isWholeDayEvent}
+                    />
+                  </div>
+                  <div className="row mb-3">
+                    <div className="col-md-6">
+                      <label htmlFor="editStartTime" className="form-label">Start Time</label>
+                      <input 
+                        type="time" 
+                        className="form-control" 
+                        id="editStartTime" 
+                        name="startTime" 
+                        value={editingEvent.startTime || ''} 
+                        onChange={handleEditInputChange}
+                        disabled={editingEvent.isWholeDayEvent}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <label htmlFor="editEndTime" className="form-label">End Time</label>
+                      <input 
+                        type="time" 
+                        className="form-control" 
+                        id="editEndTime" 
+                        name="endTime" 
+                        value={editingEvent.endTime || ''} 
+                        onChange={handleEditInputChange}
+                        disabled={editingEvent.isWholeDayEvent}
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-3 form-check">
+                    <input 
+                      type="checkbox" 
+                      className="form-check-input" 
+                      id="editIsWholeDayEvent" 
+                      name="isWholeDayEvent" 
+                      checked={editingEvent.isWholeDayEvent || false} 
+                      onChange={handleEditInputChange} 
+                    />
+                    <label className="form-check-label" htmlFor="editIsWholeDayEvent">
+                      <strong>Whole Day Event</strong> - Event runs all day without specific times
+                    </label>
                   </div>
                   <div className="mb-3">
                     <label htmlFor="editDescription" className="form-label">Short Description</label>

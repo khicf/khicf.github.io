@@ -64,7 +64,9 @@ export default function ScriptureModal({ scriptureId, onClose }) {
             </blockquote>
             <p className="custom-text-muted small mb-0">
               Shared by {scripture.author} on{" "}
-              {new Date(scripture.date).toLocaleDateString()}
+              {new Date(scripture.date + 'T00:00:00').toLocaleDateString('en-US', {
+                timeZone: 'America/Chicago'
+              })}
             </p>
           </div>
         </div>

@@ -48,7 +48,9 @@ export default async function ScripturePage({ params }) {
               <h1 className="display-5 mb-3">{scripture.reference}</h1>
               <p className="text-muted">
                 Shared by {scripture.author} on{" "}
-                {new Date(scripture.date).toLocaleDateString()}
+                {new Date(scripture.date + 'T00:00:00').toLocaleDateString('en-US', {
+                  timeZone: 'America/Chicago'
+                })}
               </p>
             </header>
 

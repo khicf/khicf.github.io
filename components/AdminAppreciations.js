@@ -147,7 +147,8 @@ export default function AdminAppreciations() {
                               {new Date(appreciation.createdAt).toLocaleDateString('en-US', { 
                                 year: 'numeric', 
                                 month: 'long', 
-                                day: 'numeric' 
+                                day: 'numeric',
+                                timeZone: 'America/Chicago'
                               })}
                             </span>
                           </div>

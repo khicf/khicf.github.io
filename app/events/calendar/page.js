@@ -33,11 +33,54 @@ export default function EventCalendar() {
     fetch("/api/events")
       .then((res) => res.json())
       .then((data) => {
-        const formattedEvents = data.events.map((event) => ({
-          ...event,
-          start: new Date(event.date),
-          end: new Date(event.date),
-        }));
+        const formattedEvents = data.events.map((event) => {
+          // Use startDate and endDate if available, otherwise fall back to date
+          let startDate, endDate, allDay = true;
+          
+          // Check if it's explicitly marked as a whole day event or has no time information
+          const isWholeDayEvent = event.isWholeDayEvent || 
+                                 (!event.startTime && !event.endTime && !event.time);
+          
+          if (event.startDate && event.endDate) {
+            // Use the new start and end date fields
+            if (isWholeDayEvent) {
+              startDate = new Date(event.startDate + 'T00:00:00-06:00');
+              endDate = new Date(event.endDate + 'T00:00:00-06:00');
+              allDay = true;
+            } else {
+              let startTimeStr = event.startTime || '00:00:00';
+              let endTimeStr = event.endTime || '23:59:59';
+              
+              startDate = new Date(event.startDate + 'T' + startTimeStr + '-06:00');
+              endDate = new Date(event.endDate + 'T' + endTimeStr + '-06:00');
+              allDay = false;
+            }
+          } else if (event.startDate) {
+            // Only start date provided, make it a single day event
+            if (isWholeDayEvent) {
+              startDate = new Date(event.startDate + 'T00:00:00-06:00');
+              endDate = new Date(event.startDate + 'T00:00:00-06:00');
+              allDay = true;
+            } else {
+              let startTimeStr = event.startTime || '00:00:00';
+              startDate = new Date(event.startDate + 'T' + startTimeStr + '-06:00');
+              endDate = new Date(event.startDate + 'T' + startTimeStr + '-06:00');
+              allDay = false;
+            }
+          } else {
+            // Fall back to legacy date field
+            startDate = new Date(event.date + 'T00:00:00-06:00');
+            endDate = new Date(event.date + 'T00:00:00-06:00');
+            allDay = isWholeDayEvent;
+          }
+          
+          return {
+            ...event,
+            start: startDate,
+            end: endDate,
+            allDay: allDay
+          };
+        });
         setEvents(formattedEvents);
         setLoading(false);
       })
@@ -55,9 +98,6 @@ export default function EventCalendar() {
     setDate(newDate);
   };
 
-  const handleViewChange = (newView) => {
-    setView(newView);
-  };
 
   if (loading) {
     return (
@@ -95,32 +135,6 @@ export default function EventCalendar() {
           </p>
         </div>
         <div className="col-md-4 text-md-end mt-3 mt-md-0">
-          <div className="btn-group" role="group">
-            <button
-              className={`btn ${
-                view === "month" ? "btn-primary" : "btn-outline-primary"
-              } btn-sm`}
-              onClick={() => handleViewChange("month")}
-            >
-              Month
-            </button>
-            <button
-              className={`btn ${
-                view === "week" ? "btn-primary" : "btn-outline-primary"
-              } btn-sm`}
-              onClick={() => handleViewChange("week")}
-            >
-              Week
-            </button>
-            <button
-              className={`btn ${
-                view === "day" ? "btn-primary" : "btn-outline-primary"
-              } btn-sm`}
-              onClick={() => handleViewChange("day")}
-            >
-              Day
-            </button>
-          </div>
         </div>
       </header>
 
@@ -140,7 +154,7 @@ export default function EventCalendar() {
                 titleAccessor="title"
                 onSelectEvent={handleSelectEvent}
                 onNavigate={handleNavigate}
-                onView={handleViewChange}
+                views={['month']}
                 date={date}
                 view={view}
                 popup
@@ -186,42 +200,6 @@ export default function EventCalendar() {
           )}
         </div>
       </div>
-
-      {/* Calendar Legend */}
-      {events.length > 0 && (
-        <div className="mt-4">
-          <div className="row">
-            <div className="col-md-6">
-              <div className="card border-0 bg-light">
-                <div className="card-body p-3">
-                  <h6 className="card-title mb-2 fw-bold">
-                    📍 Navigation Tips
-                  </h6>
-                  <ul className="list-unstyled mb-0 small text-muted">
-                    <li>• Click on any event to view details</li>
-                    <li>
-                      • Use the view buttons to switch between Month, Week, and
-                      Day views
-                    </li>
-                    <li>• Navigate using the calendar controls</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 mt-3 mt-md-0">
-              <div className="card border-0 bg-light">
-                <div className="card-body p-3">
-                  <h6 className="card-title mb-2 fw-bold">📊 Event Summary</h6>
-                  <p className="mb-0 small text-muted">
-                    <strong>{events.length}</strong> event
-                    {events.length !== 1 ? "s" : ""} scheduled
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

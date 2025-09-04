@@ -282,10 +282,11 @@ export default function PrayerPageClient() {
                         <div className="fw-semibold text-dark">{prayer.author || 'Anonymous'}</div>
                         <div className="text-muted small">
                           <time dateTime={prayer.date}>
-                            {new Date(prayer.date).toLocaleDateString('en-US', { 
+                            {new Date(prayer.date + 'T00:00:00').toLocaleDateString('en-US', { 
                               year: 'numeric', 
                               month: 'long', 
-                              day: 'numeric' 
+                              day: 'numeric',
+                              timeZone: 'America/Chicago'
                             })}
                           </time>
                         </div>
@@ -392,9 +393,10 @@ export default function PrayerPageClient() {
                                 <span className="fw-semibold text-dark">{comment.author}</span>
                                 <div className="d-flex align-items-center gap-2">
                                   <time className="text-muted small" dateTime={comment.date}>
-                                    {new Date(comment.date).toLocaleDateString('en-US', { 
+                                    {new Date(comment.date + 'T00:00:00').toLocaleDateString('en-US', { 
                                       month: 'short', 
-                                      day: 'numeric' 
+                                      day: 'numeric',
+                                      timeZone: 'America/Chicago'
                                     })}
                                   </time>
                                   {session && canEditContent(comment) && (

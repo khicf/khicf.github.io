@@ -3,13 +3,17 @@ import prisma from '@/lib/prisma';
 
 export async function POST(request) {
   try {
-    const { title, date, time, description, location, contact, fullDescription, isPublic } = await request.json();
+    const { title, date, startDate, endDate, time, startTime, endTime, description, location, contact, fullDescription, isPublic } = await request.json();
 
     const newEvent = await prisma.event.create({
       data: {
         title,
         date,
+        startDate,
+        endDate,
         time,
+        startTime,
+        endTime,
         description,
         location,
         contact,
@@ -27,14 +31,18 @@ export async function POST(request) {
 
 export async function PUT(request) {
   try {
-    const { id, title, date, time, description, location, contact, fullDescription, isPublic } = await request.json();
+    const { id, title, date, startDate, endDate, time, startTime, endTime, description, location, contact, fullDescription, isPublic } = await request.json();
 
     const updatedEvent = await prisma.event.update({
       where: { id: parseInt(id) },
       data: {
         title,
         date,
+        startDate,
+        endDate,
         time,
+        startTime,
+        endTime,
         description,
         location,
         contact,
