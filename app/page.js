@@ -12,17 +12,41 @@ export default function HomePage() {
     // Fetch Latest Events
     fetch("/api/events")
       .then((res) => res.json())
-      .then((data) => setLatestEvents(data.events.slice(0, 3))); // Get top 3
+      .then((data) => {
+        if (data.events && Array.isArray(data.events)) {
+          setLatestEvents(data.events.slice(0, 3));
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching events:', error);
+        setLatestEvents([]);
+      });
 
     // Fetch Recent Prayer Requests
     fetch("/api/prayers?public=true")
       .then((res) => res.json())
-      .then((data) => setRecentPrayers(data.prayers.slice(0, 3))); // Get top 3
+      .then((data) => {
+        if (data.prayers && Array.isArray(data.prayers)) {
+          setRecentPrayers(data.prayers.slice(0, 3));
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching prayers:', error);
+        setRecentPrayers([]);
+      });
 
     // Fetch Recent Scripture Shares
     fetch("/api/scriptures")
       .then((res) => res.json())
-      .then((data) => setRecentScriptures(data.scriptures.slice(0, 3))); // Get top 3
+      .then((data) => {
+        if (data.scriptures && Array.isArray(data.scriptures)) {
+          setRecentScriptures(data.scriptures.slice(0, 3));
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching scriptures:', error);
+        setRecentScriptures([]);
+      });
   }, []);
 
   return (

@@ -13,7 +13,22 @@ export async function GET(request) {
           isPublic: true,
         },
         include: {
-          comments: true,
+          comments: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
         },
         orderBy: {
           id: 'desc',
@@ -22,7 +37,22 @@ export async function GET(request) {
     } else {
       prayers = await prisma.prayer.findMany({
         include: {
-          comments: true,
+          comments: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
         },
         orderBy: {
           id: 'desc',
@@ -37,14 +67,33 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  const { getServerSession } = await import("next-auth/next");
+  const { authOptions } = await import("@/app/api/auth/[...nextauth]/route");
+  
   try {
     const { request: prayerRequest, author, isPublic } = await request.json();
+    
+    const session = await getServerSession(authOptions);
+    let userId = null;
+    
+    if (session) {
+      const user = await prisma.user.findUnique({
+        where: {
+          email: session.user.email,
+        },
+      });
+      if (user) {
+        userId = user.id;
+      }
+    }
+    
     const newPrayer = await prisma.prayer.create({
       data: {
         request: prayerRequest,
         author: author || 'Anonymous',
         date: new Date().toISOString().split('T')[0],
         isPublic: isPublic,
+        userId: userId,
       },
     });
     return NextResponse.json({ message: "Prayer request submitted successfully!", prayer: newPrayer });

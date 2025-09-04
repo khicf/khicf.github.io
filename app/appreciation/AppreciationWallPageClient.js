@@ -14,6 +14,8 @@ export default function AppreciationWallPageClient() {
   const [searchTerm, setSearchTerm] = useState('');
   const [message, setMessage] = useState('');
   const [postMessage, setPostMessage] = useState('');
+  const [editingAppreciation, setEditingAppreciation] = useState(null);
+  const [editAppreciationText, setEditAppreciationText] = useState('');
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -73,6 +75,75 @@ export default function AppreciationWallPageClient() {
     }
   };
 
+  const startEditingAppreciation = (appreciation) => {
+    setEditingAppreciation(appreciation.id);
+    setEditAppreciationText(appreciation.message);
+  };
+
+  const cancelEditingAppreciation = () => {
+    setEditingAppreciation(null);
+    setEditAppreciationText('');
+  };
+
+  const handleAppreciationUpdate = async (appreciationId) => {
+    if (!editAppreciationText.trim()) return;
+
+    try {
+      const res = await fetch(`/api/appreciations/${appreciationId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: editAppreciationText }),
+      });
+      
+      if (res.ok) {
+        fetchAppreciations();
+        setEditingAppreciation(null);
+        setEditAppreciationText('');
+        setPostMessage('Appreciation updated successfully!');
+      } else {
+        const data = await res.json();
+        setPostMessage(`Error updating appreciation: ${data.message}`);
+      }
+    } catch (err) {
+      setPostMessage(`Error updating appreciation: ${err.message}`);
+    }
+  };
+
+  const handleAppreciationDelete = async (appreciationId) => {
+    if (!confirm('Are you sure you want to delete this appreciation?')) return;
+
+    try {
+      const res = await fetch(`/api/appreciations/${appreciationId}`, {
+        method: 'DELETE',
+      });
+      
+      if (res.ok) {
+        fetchAppreciations();
+        setPostMessage('Appreciation deleted successfully!');
+      } else {
+        const data = await res.json();
+        setPostMessage(`Error deleting appreciation: ${data.message}`);
+      }
+    } catch (err) {
+      setPostMessage(`Error deleting appreciation: ${err.message}`);
+    }
+  };
+
+  const canEditContent = (content) => {
+    if (!session || !session.user) return false;
+    
+    // Admins can edit any content
+    if (session.user.role === 'ADMIN') return true;
+    
+    // Check if user owns the content by email (more reliable than ID matching)
+    if (content.user && content.user.email === session.user.email) return true;
+    
+    // Fallback: check by userId if available
+    if (content.userId && session.user.id === content.userId) return true;
+    
+    return false;
+  };
+
   if (status === 'loading') {
     return <div>Loading...</div>;
   }
@@ -126,16 +197,71 @@ export default function AppreciationWallPageClient() {
         </div>
 
         <div className="col-md-12">
+          {postMessage && (
+            <div className={`alert ${postMessage.includes('Error') ? 'alert-danger' : 'alert-success'} alert-dismissible fade show mb-4`} role="alert">
+              {postMessage}
+              <button type="button" className="btn-close" onClick={() => setPostMessage('')} aria-label="Close"></button>
+            </div>
+          )}
           <h2 className="mb-4">Recent Appreciations</h2>
           {filteredAppreciations.length > 0 ? (
             filteredAppreciations.map((appreciation) => (
               <div key={appreciation.id} className="card mb-3">
                 <div className="card-body">
-                  <p className="card-text">{appreciation.message}</p>
-                  <div className="d-flex justify-content-between align-items-center">
-                    <small className="text-muted">From: {appreciation.user.name}</small>
-                    <small className="text-muted">{new Date(appreciation.createdAt).toLocaleDateString()}</small>
+                  <div className="d-flex justify-content-between align-items-start mb-2">
+                    <div className="flex-grow-1">
+                      {editingAppreciation === appreciation.id ? (
+                        <div className="edit-appreciation-form">
+                          <div className="mb-3">
+                            <textarea
+                              className="form-control"
+                              rows="3"
+                              value={editAppreciationText}
+                              onChange={e => setEditAppreciationText(e.target.value)}
+                              placeholder="Edit your appreciation message..."
+                              style={{ borderRadius: '8px' }}
+                            />
+                          </div>
+                          <div className="d-flex gap-2">
+                            <button
+                              className="btn btn-primary btn-sm"
+                              onClick={() => handleAppreciationUpdate(appreciation.id)}
+                              disabled={!editAppreciationText.trim()}
+                            >
+                              Save Changes
+                            </button>
+                            <button
+                              className="btn btn-outline-secondary btn-sm"
+                              onClick={cancelEditingAppreciation}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="card-text mb-0">{appreciation.message}</p>
+                      )}
+                    </div>
+                    {session && canEditContent(appreciation) && editingAppreciation !== appreciation.id && (
+                      <div className="dropdown">
+                        <button className="btn btn-link text-muted p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                          </svg>
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-end">
+                          <li><button className="dropdown-item" onClick={() => startEditingAppreciation(appreciation)}>Edit Appreciation</button></li>
+                          <li><button className="dropdown-item text-danger" onClick={() => handleAppreciationDelete(appreciation.id)}>Delete Appreciation</button></li>
+                        </ul>
+                      </div>
+                    )}
                   </div>
+                  {editingAppreciation !== appreciation.id && (
+                    <div className="d-flex justify-content-between align-items-center">
+                      <small className="text-muted">From: {appreciation.user.name}</small>
+                      <small className="text-muted">{new Date(appreciation.createdAt).toLocaleDateString()}</small>
+                    </div>
+                  )}
                 </div>
               </div>
             ))

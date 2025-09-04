@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 
 export default function AdminUsers() {
   const [approvedUsers, setApprovedUsers] = useState([]);
@@ -8,11 +8,11 @@ export default function AdminUsers() {
   const [editingUser, setEditingUser] = useState(null);
 
   const fetchUsers = () => {
-    fetch('/api/admin/users')
+    fetch("/api/admin/users")
       .then((res) => res.json())
       .then((data) => {
-        setApprovedUsers(data.users.filter(user => user.approved));
-        setUnapprovedUsers(data.users.filter(user => !user.approved));
+        setApprovedUsers(data.users.filter((user) => user.approved));
+        setUnapprovedUsers(data.users.filter((user) => !user.approved));
       });
   };
 
@@ -21,15 +21,13 @@ export default function AdminUsers() {
   }, []);
 
   const handleRoleChange = async (userId, newRole) => {
-    const res = await fetch(`/api/admin/users/${userId}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ role: newRole }),
-      }
-    );
+    const res = await fetch(`/api/admin/users/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ role: newRole }),
+    });
 
     if (res.ok) {
       fetchUsers();
@@ -37,15 +35,13 @@ export default function AdminUsers() {
   };
 
   const handleApprove = async (userId) => {
-    const res = await fetch(`/api/admin/users/${userId}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ approved: true }),
-      }
-    );
+    const res = await fetch(`/api/admin/users/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ approved: true }),
+    });
 
     if (res.ok) {
       fetchUsers();
@@ -54,7 +50,7 @@ export default function AdminUsers() {
 
   const handleDeny = async (userId) => {
     const res = await fetch(`/api/admin/users/${userId}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
 
     if (res.ok) {
@@ -63,9 +59,9 @@ export default function AdminUsers() {
   };
 
   const handleDelete = async (userId) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
+    if (window.confirm("Are you sure you want to delete this user?")) {
       const res = await fetch(`/api/admin/users/${userId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (res.ok) {
@@ -87,15 +83,15 @@ export default function AdminUsers() {
     e.preventDefault();
     try {
       const res = await fetch(`/api/admin/users/${editingUser.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(editingUser),
       });
-      if (!res.ok) throw new Error('Failed to update user');
+      if (!res.ok) throw new Error("Failed to update user");
       setEditingUser(null);
       fetchUsers();
     } catch (err) {
-      console.error('Error updating user:', err);
+      console.error("Error updating user:", err);
     }
   };
 
@@ -105,7 +101,7 @@ export default function AdminUsers() {
       <header className="page-hero row align-items-center justify-content-between mb-4 pb-3 border-bottom border-light">
         <div className="col-md-8">
           <h1 className="display-6 mb-2 fw-bold">User Management</h1>
-          <p className="text-muted mb-0" style={{ fontSize: '1.1rem' }}>
+          <p className="text-muted mb-0" style={{ fontSize: "1.1rem" }}>
             Manage user registrations and permissions
           </p>
         </div>
@@ -116,10 +112,12 @@ export default function AdminUsers() {
         <h2 className="mb-4 d-flex align-items-center">
           New User Requests
           {unapprovedUsers.length > 0 && (
-            <span className="badge bg-primary text-white ms-2">{unapprovedUsers.length}</span>
+            <span className="badge bg-primary text-white ms-2">
+              {unapprovedUsers.length}
+            </span>
           )}
         </h2>
-        
+
         {unapprovedUsers.length > 0 ? (
           <div className="row">
             {unapprovedUsers.map((user) => (
@@ -129,13 +127,13 @@ export default function AdminUsers() {
                     <h5 className="card-title">{user.name}</h5>
                     <p className="card-text text-muted">{user.email}</p>
                     <div className="d-flex gap-2">
-                      <button 
+                      <button
                         className="btn btn-success btn-sm flex-fill"
                         onClick={() => handleApprove(user.id)}
                       >
                         ✓ Approve
                       </button>
-                      <button 
+                      <button
                         className="btn btn-danger btn-sm flex-fill"
                         onClick={() => handleDeny(user.id)}
                       >
@@ -149,11 +147,10 @@ export default function AdminUsers() {
           </div>
         ) : (
           <div className="empty-state text-center py-4">
-            <div className="mb-3">
-              <span className="display-4 text-muted">✅</span>
-            </div>
             <h4 className="text-muted mb-2">No pending requests</h4>
-            <p className="text-muted">All user registrations have been processed.</p>
+            <p className="text-muted">
+              All user registrations have been processed.
+            </p>
           </div>
         )}
       </div>
@@ -182,11 +179,15 @@ export default function AdminUsers() {
                     <td className="fw-semibold">{user.name}</td>
                     <td className="text-muted">{user.email}</td>
                     <td>
-                      <span className={`badge ${
-                        user.role === 'ADMIN' ? 'bg-danger' :
-                        user.role === 'CORE' ? 'bg-warning text-dark' :
-                        'bg-secondary'
-                      }`}>
+                      <span
+                        className={`badge ${
+                          user.role === "ADMIN"
+                            ? "bg-danger"
+                            : user.role === "CORE"
+                            ? "bg-warning text-dark"
+                            : "bg-secondary"
+                        }`}
+                      >
                         {user.role}
                       </span>
                     </td>
@@ -194,23 +195,25 @@ export default function AdminUsers() {
                       <div className="d-flex gap-2 align-items-center">
                         <select
                           className="form-select form-select-sm"
-                          style={{ width: 'auto', minWidth: '100px' }}
+                          style={{ width: "auto", minWidth: "100px" }}
                           value={user.role}
-                          onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                          onChange={(e) =>
+                            handleRoleChange(user.id, e.target.value)
+                          }
                           title="Change role"
                         >
                           <option value="USER">USER</option>
                           <option value="CORE">CORE</option>
                           <option value="ADMIN">ADMIN</option>
                         </select>
-                        <button 
+                        <button
                           className="btn btn-outline-primary btn-sm"
                           onClick={() => handleEditClick(user)}
                           title="Edit user"
                         >
                           ✏️
                         </button>
-                        <button 
+                        <button
                           className="btn btn-outline-danger btn-sm"
                           onClick={() => handleDelete(user.id)}
                           title="Delete user"
@@ -226,8 +229,7 @@ export default function AdminUsers() {
           </div>
         ) : (
           <div className="empty-state text-center py-4">
-            <div className="mb-3">
-            </div>
+            <div className="mb-3"></div>
             <h4 className="text-muted mb-2">No approved users</h4>
             <p className="text-muted">No users have been approved yet.</p>
           </div>
@@ -237,80 +239,125 @@ export default function AdminUsers() {
       {/* Enhanced Edit User Modal */}
       {editingUser && (
         <div className="modal-backdrop" onClick={() => setEditingUser(null)}>
-          <div className="modal-dialog modal-dialog-centered" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-content" style={{ borderRadius: '12px', border: 'none', boxShadow: '0 16px 32px rgba(0,0,0,0.15)' }}>
-              <div className="modal-header" style={{ background: 'linear-gradient(135deg, #f8f9ff 0%, #fff 100%)', borderBottom: '1px solid #e0e0e0' }}>
+          <div
+            className="modal-dialog modal-dialog-centered"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="modal-content"
+              style={{
+                borderRadius: "12px",
+                border: "none",
+                boxShadow: "0 16px 32px rgba(0,0,0,0.15)",
+              }}
+            >
+              <div
+                className="modal-header"
+                style={{
+                  background: "linear-gradient(135deg, #f8f9ff 0%, #fff 100%)",
+                  borderBottom: "1px solid #e0e0e0",
+                }}
+              >
                 <h5 className="modal-title fw-bold d-flex align-items-center">
                   <span className="me-2">✏️</span>
                   Edit User
                 </h5>
-                <button 
-                  type="button" 
-                  className="btn-close" 
+                <button
+                  type="button"
+                  className="btn-close"
                   onClick={() => setEditingUser(null)}
-                  style={{ fontSize: '1.2rem' }}
+                  style={{ fontSize: "1.2rem" }}
                 ></button>
               </div>
-              <div className="modal-body" style={{ padding: '2rem' }}>
+              <div className="modal-body" style={{ padding: "2rem" }}>
                 <form>
                   <div className="mb-3">
-                    <label htmlFor="editName" className="form-label fw-semibold">Name</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      id="editName" 
-                      name="name" 
-                      value={editingUser.name} 
-                      onChange={handleEditInputChange} 
-                      required 
-                      style={{ borderRadius: '8px', padding: '0.75rem 1rem' }}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="editEmail" className="form-label fw-semibold">Email</label>
-                    <input 
-                      type="email" 
-                      className="form-control" 
-                      id="editEmail" 
-                      name="email" 
-                      value={editingUser.email} 
-                      readOnly 
-                      disabled 
-                      style={{ borderRadius: '8px', padding: '0.75rem 1rem', backgroundColor: '#f8f9fa' }}
-                    />
-                    <small className="text-muted">Email addresses cannot be modified</small>
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="editRole" className="form-label fw-semibold">Role</label>
-                    <select 
-                      className="form-select" 
-                      id="editRole" 
-                      name="role" 
-                      value={editingUser.role} 
+                    <label
+                      htmlFor="editName"
+                      className="form-label fw-semibold"
+                    >
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="editName"
+                      name="name"
+                      value={editingUser.name}
                       onChange={handleEditInputChange}
-                      style={{ borderRadius: '8px', padding: '0.75rem 1rem' }}
+                      required
+                      style={{ borderRadius: "8px", padding: "0.75rem 1rem" }}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label
+                      htmlFor="editEmail"
+                      className="form-label fw-semibold"
+                    >
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="editEmail"
+                      name="email"
+                      value={editingUser.email}
+                      readOnly
+                      disabled
+                      style={{
+                        borderRadius: "8px",
+                        padding: "0.75rem 1rem",
+                        backgroundColor: "#f8f9fa",
+                      }}
+                    />
+                    <small className="text-muted">
+                      Email addresses cannot be modified
+                    </small>
+                  </div>
+                  <div className="mb-3">
+                    <label
+                      htmlFor="editRole"
+                      className="form-label fw-semibold"
+                    >
+                      Role
+                    </label>
+                    <select
+                      className="form-select"
+                      id="editRole"
+                      name="role"
+                      value={editingUser.role}
+                      onChange={handleEditInputChange}
+                      style={{ borderRadius: "8px", padding: "0.75rem 1rem" }}
                     >
                       <option value="USER">USER - Standard access</option>
                       <option value="CORE">CORE - Enhanced permissions</option>
-                      <option value="ADMIN">ADMIN - Full administrative access</option>
+                      <option value="ADMIN">
+                        ADMIN - Full administrative access
+                      </option>
                     </select>
                   </div>
                 </form>
               </div>
-              <div className="modal-footer" style={{ borderTop: '1px solid #e0e0e0', padding: '1.5rem 2rem' }}>
-                <button 
-                  type="button" 
-                  className="btn btn-outline-secondary" 
+              <div
+                className="modal-footer"
+                style={{
+                  borderTop: "1px solid #e0e0e0",
+                  padding: "1.5rem 2rem",
+                }}
+              >
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
                   onClick={() => setEditingUser(null)}
-                  style={{ borderRadius: '6px', padding: '0.5rem 1.5rem' }}
+                  style={{ borderRadius: "6px", padding: "0.5rem 1.5rem" }}
                 >
                   Cancel
                 </button>
-                <button 
-                  type="button" 
-                  className="btn btn-primary" 
+                <button
+                  type="button"
+                  className="btn btn-primary"
                   onClick={handleUpdateUser}
-                  style={{ borderRadius: '6px', padding: '0.5rem 1.5rem' }}
+                  style={{ borderRadius: "6px", padding: "0.5rem 1.5rem" }}
                 >
                   Save Changes
                 </button>

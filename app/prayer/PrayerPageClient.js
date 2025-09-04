@@ -12,8 +12,13 @@ export default function PrayerPageClient() {
   const [request, setRequest] = useState('');
   const [author, setAuthor] = useState('');
   const [isPublic, setIsPublic] = useState(true);
-  const [commentText, setCommentText] = useState('');
-  const [commentAuthor, setCommentAuthor] = useState('');
+  const [commentTexts, setCommentTexts] = useState({});
+  const [commentAuthors, setCommentAuthors] = useState({});
+  const [editingPrayer, setEditingPrayer] = useState(null);
+  const [editingComment, setEditingComment] = useState(null);
+  const [editPrayerText, setEditPrayerText] = useState('');
+  const [editPrayerIsPublic, setEditPrayerIsPublic] = useState(true);
+  const [editCommentText, setEditCommentText] = useState('');
 
   const fetchPrayers = () => {
     const url = session ? '/api/prayers' : '/api/prayers?public=true';
@@ -58,6 +63,9 @@ export default function PrayerPageClient() {
   };
 
   const handleCommentSubmit = async (prayerId) => {
+    const commentText = commentTexts[prayerId] || '';
+    const commentAuthor = commentAuthors[prayerId] || '';
+    
     if (!commentText.trim()) return;
 
     const res = await fetch(`/api/prayers/${prayerId}/comments`, {
@@ -67,9 +75,141 @@ export default function PrayerPageClient() {
     });
     if (res.ok) {
       fetchPrayers();
-      setCommentText('');
-      setCommentAuthor('');
+      setCommentTexts(prev => ({ ...prev, [prayerId]: '' }));
+      setCommentAuthors(prev => ({ ...prev, [prayerId]: '' }));
     }
+  };
+
+  const startEditingPrayer = (prayer) => {
+    setEditingPrayer(prayer.id);
+    setEditPrayerText(prayer.request);
+    setEditPrayerIsPublic(prayer.isPublic);
+  };
+
+  const cancelEditingPrayer = () => {
+    setEditingPrayer(null);
+    setEditPrayerText('');
+    setEditPrayerIsPublic(true);
+  };
+
+  const handlePrayerUpdate = async (prayerId) => {
+    if (!editPrayerText.trim()) return;
+
+    const res = await fetch(`/api/prayers/${prayerId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        request: editPrayerText, 
+        isPublic: editPrayerIsPublic 
+      }),
+    });
+    
+    if (res.ok) {
+      fetchPrayers();
+      setEditingPrayer(null);
+      setEditPrayerText('');
+      setEditPrayerIsPublic(true);
+    }
+  };
+
+  const handlePrayerDelete = async (prayerId) => {
+    if (!confirm('Are you sure you want to delete this prayer?')) return;
+
+    try {
+      const res = await fetch(`/api/prayers/${prayerId}`, {
+        method: 'DELETE',
+      });
+      
+      if (res.ok) {
+        fetchPrayers();
+        console.log('Prayer deleted successfully');
+      } else {
+        const errorData = await res.json();
+        console.error('Error deleting prayer:', errorData);
+        alert(`Error deleting prayer: ${errorData.message || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Network error deleting prayer:', error);
+      alert('Network error deleting prayer');
+    }
+  };
+
+  const startEditingComment = (comment) => {
+    setEditingComment(comment.id);
+    setEditCommentText(comment.text);
+  };
+
+  const cancelEditingComment = () => {
+    setEditingComment(null);
+    setEditCommentText('');
+  };
+
+  const handleCommentUpdate = async (commentId) => {
+    if (!editCommentText.trim()) return;
+
+    const res = await fetch(`/api/comments/${commentId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: editCommentText }),
+    });
+    
+    if (res.ok) {
+      fetchPrayers();
+      setEditingComment(null);
+      setEditCommentText('');
+    }
+  };
+
+  const handleCommentDelete = async (commentId) => {
+    if (!confirm('Are you sure you want to delete this comment?')) return;
+
+    const res = await fetch(`/api/comments/${commentId}`, {
+      method: 'DELETE',
+    });
+    
+    if (res.ok) {
+      fetchPrayers();
+    }
+  };
+
+  const canEditContent = (content) => {
+    if (!session || !session.user) {
+      console.log('No session or user');
+      return false;
+    }
+    
+    console.log('Checking canEditContent:', {
+      sessionUser: session.user,
+      content: content,
+      userRole: session.user.role
+    });
+    
+    // Admins can edit any content
+    if (session.user.role === 'ADMIN') {
+      console.log('Admin user can edit');
+      return true;
+    }
+    
+    // Check if user owns the content by email (more reliable than ID matching)
+    if (content.user && content.user.email === session.user.email) {
+      console.log('User owns content by email');
+      return true;
+    }
+    
+    // Fallback: check by userId if available
+    if (content.userId && session.user.id === content.userId) {
+      console.log('User owns content by userId');
+      return true;
+    }
+    
+    // For legacy content without userId, check by author name
+    if (!content.userId && content.author && content.author === session.user.name) {
+      console.log('User owns content by author name');
+      return true;
+    }
+    
+    console.log('User cannot edit content');
+    return false;
   };
 
   return (
@@ -151,20 +291,79 @@ export default function PrayerPageClient() {
                         </div>
                       </div>
                     </div>
-                    {!prayer.isPublic && (
-                      <span className="badge bg-primary bg-opacity-10 text-primary px-3 py-2" style={{ borderRadius: '20px', fontSize: '0.8rem', fontWeight: '500' }}>
-                        Private
-                      </span>
-                    )}
+                    <div className="d-flex align-items-center gap-2">
+                      {!prayer.isPublic && (
+                        <span className="badge bg-primary bg-opacity-10 text-primary px-3 py-2" style={{ borderRadius: '20px', fontSize: '0.8rem', fontWeight: '500' }}>
+                          Private
+                        </span>
+                      )}
+                      {session && canEditContent(prayer) && (
+                        <div className="dropdown">
+                          <button className="btn btn-link text-muted p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                            </svg>
+                          </button>
+                          <ul className="dropdown-menu dropdown-menu-end">
+                            <li><button className="dropdown-item" onClick={() => startEditingPrayer(prayer)}>Edit Prayer</button></li>
+                            <li><button className="dropdown-item text-danger" onClick={() => handlePrayerDelete(prayer.id)}>Delete Prayer</button></li>
+                          </ul>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Prayer Content */}
                   <div className="prayer-content mb-4">
-                    <blockquote className="mb-0">
-                      <p className="fs-5 lh-base text-dark mb-0" style={{ fontStyle: 'italic' }}>
-                        "{prayer.request}"
-                      </p>
-                    </blockquote>
+                    {editingPrayer === prayer.id ? (
+                      <div className="edit-prayer-form">
+                        <div className="mb-3">
+                          <textarea
+                            className="form-control"
+                            rows="4"
+                            value={editPrayerText}
+                            onChange={e => setEditPrayerText(e.target.value)}
+                            placeholder="Edit your prayer request..."
+                            style={{ borderRadius: '8px' }}
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id={`editPublic-${prayer.id}`}
+                              checked={editPrayerIsPublic}
+                              onChange={e => setEditPrayerIsPublic(e.target.checked)}
+                            />
+                            <label className="form-check-label" htmlFor={`editPublic-${prayer.id}`}>
+                              Make this prayer public
+                            </label>
+                          </div>
+                        </div>
+                        <div className="d-flex gap-2">
+                          <button
+                            className="btn btn-primary btn-sm"
+                            onClick={() => handlePrayerUpdate(prayer.id)}
+                            disabled={!editPrayerText.trim()}
+                          >
+                            Save Changes
+                          </button>
+                          <button
+                            className="btn btn-outline-secondary btn-sm"
+                            onClick={cancelEditingPrayer}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <blockquote className="mb-0">
+                        <p className="fs-5 lh-base text-dark mb-0" style={{ fontStyle: 'italic' }}>
+                          "{prayer.request}"
+                        </p>
+                      </blockquote>
+                    )}
                   </div>
 
                   {/* Comments Section */}
@@ -191,15 +390,62 @@ export default function PrayerPageClient() {
                             <div className="comment-content flex-grow-1">
                               <div className="comment-header d-flex align-items-center justify-content-between mb-2">
                                 <span className="fw-semibold text-dark">{comment.author}</span>
-                                <time className="text-muted small" dateTime={comment.date}>
-                                  {new Date(comment.date).toLocaleDateString('en-US', { 
-                                    month: 'short', 
-                                    day: 'numeric' 
-                                  })}
-                                </time>
+                                <div className="d-flex align-items-center gap-2">
+                                  <time className="text-muted small" dateTime={comment.date}>
+                                    {new Date(comment.date).toLocaleDateString('en-US', { 
+                                      month: 'short', 
+                                      day: 'numeric' 
+                                    })}
+                                  </time>
+                                  {session && canEditContent(comment) && (
+                                    <div className="dropdown">
+                                      <button className="btn btn-link text-muted p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{ fontSize: '12px' }}>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                          <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                                        </svg>
+                                      </button>
+                                      <ul className="dropdown-menu dropdown-menu-end">
+                                        <li><button className="dropdown-item" onClick={() => startEditingComment(comment)}>Edit Comment</button></li>
+                                        <li><button className="dropdown-item text-danger" onClick={() => handleCommentDelete(comment.id)}>Delete Comment</button></li>
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                               <div className="comment-text text-dark">
-                                {comment.text}
+                                {editingComment === comment.id ? (
+                                  <div className="edit-comment-form">
+                                    <div className="mb-2">
+                                      <textarea
+                                        className="form-control"
+                                        rows="2"
+                                        value={editCommentText}
+                                        onChange={e => setEditCommentText(e.target.value)}
+                                        placeholder="Edit your comment..."
+                                        style={{ borderRadius: '6px', fontSize: '0.9rem' }}
+                                      />
+                                    </div>
+                                    <div className="d-flex gap-1">
+                                      <button
+                                        className="btn btn-primary btn-sm"
+                                        onClick={() => handleCommentUpdate(comment.id)}
+                                        disabled={!editCommentText.trim()}
+                                        style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}
+                                      >
+                                        Save
+                                      </button>
+                                      <button
+                                        className="btn btn-outline-secondary btn-sm"
+                                        onClick={cancelEditingComment}
+                                        style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}
+                                      >
+                                        Cancel
+                                      </button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  comment.text
+                                )}
                               </div>
                             </div>
                           </div>
@@ -219,8 +465,8 @@ export default function PrayerPageClient() {
                             className="form-control border-0"
                             rows="3"
                             placeholder="Share words of encouragement, support, or let them know you're praying for them..."
-                            value={commentText}
-                            onChange={e => setCommentText(e.target.value)}
+                            value={commentTexts[prayer.id] || ''}
+                            onChange={e => setCommentTexts(prev => ({ ...prev, [prayer.id]: e.target.value }))}
                             style={{ 
                               backgroundColor: 'white', 
                               borderRadius: '8px',
@@ -235,8 +481,8 @@ export default function PrayerPageClient() {
                               type="text"
                               className="form-control border-0"
                               placeholder="Your name (optional)"
-                              value={commentAuthor}
-                              onChange={e => setCommentAuthor(e.target.value)}
+                              value={commentAuthors[prayer.id] || ''}
+                              onChange={e => setCommentAuthors(prev => ({ ...prev, [prayer.id]: e.target.value }))}
                               style={{ 
                                 backgroundColor: 'white', 
                                 borderRadius: '8px',
@@ -248,7 +494,7 @@ export default function PrayerPageClient() {
                             <button
                               className="btn btn-primary w-100"
                               onClick={() => handleCommentSubmit(prayer.id)}
-                              disabled={!commentText.trim()}
+                              disabled={!(commentTexts[prayer.id] || '').trim()}
                               style={{ borderRadius: '8px', fontWeight: '500' }}
                             >
                               Post Comment

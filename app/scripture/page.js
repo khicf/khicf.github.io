@@ -125,20 +125,32 @@ export default function ScripturePage() {
     );
   };
 
-  const getCardSize = (text) => {
+  const getCardSize = (text, reference) => {
     if (!text) return "short";
     
     const words = text.trim().split(/\s+/).length;
     const chars = text.length;
     
-    // More conservative approach - better to show full content when possible
-    if (words <= 8 || chars <= 60) return "short";
-    if (words <= 30 || chars <= 250) return "medium"; // Increased thresholds
+    // Check if this looks like a Bible verse reference
+    const isBibleVerse = reference && /\d+:\d+/.test(reference);
     
-    // Only mark as long if it's definitely going to overflow
-    if (chars > 400 || words > 50) return "long";
-    
-    return "medium"; // Default to medium to avoid unnecessary fades
+    // For Bible verses, be more conservative about marking as "short"
+    // Only use "short" for very brief passages that are clearly meant to be highlighted
+    if (isBibleVerse) {
+      // For Bible verses, only mark as short if it's extremely brief (like a single sentence)
+      if (words <= 5 && chars <= 40) return "short";
+      // Most Bible verses should be medium to maintain proper formatting
+      if (words <= 40 || chars <= 300) return "medium";
+      // Long passages get the fade effect
+      if (chars > 400 || words > 50) return "long";
+      return "medium";
+    } else {
+      // Non-Bible content (quotes, etc.) can use the original logic
+      if (words <= 8 || chars <= 60) return "short";
+      if (words <= 30 || chars <= 250) return "medium";
+      if (chars > 400 || words > 50) return "long";
+      return "medium";
+    }
   };
 
 
@@ -269,7 +281,7 @@ export default function ScripturePage() {
       <div className={viewMode === "grid" ? "scripture-grid" : "scripture-list"} role="list">
         {currentItems.length > 0 ? (
           currentItems.map((scripture) => {
-            const size = getCardSize(scripture.passage || "");
+            const size = getCardSize(scripture.passage || "", scripture.reference || "");
             return (
               <article
                 key={scripture.id}
