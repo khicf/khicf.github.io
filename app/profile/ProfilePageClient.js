@@ -37,19 +37,6 @@ export default function ProfilePageClient() {
             Manage your account settings and security preferences
           </p>
         </div>
-        <div className="col-md-4 text-md-end mt-3 mt-md-0">
-          <div
-            className="user-avatar bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center"
-            style={{ width: "64px", height: "64px" }}
-          >
-            <span
-              className="text-primary fw-bold"
-              style={{ fontSize: "1.5rem" }}
-            >
-              👤
-            </span>
-          </div>
-        </div>
       </header>
 
       <div className="row justify-content-center">

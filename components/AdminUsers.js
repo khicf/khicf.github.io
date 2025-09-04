@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function AdminUsers() {
@@ -104,6 +105,15 @@ export default function AdminUsers() {
           <p className="text-muted mb-0" style={{ fontSize: "1.1rem" }}>
             Manage user registrations and permissions
           </p>
+        </div>
+        <div className="col-md-4 text-end">
+          <Link
+            href="/admin/users/create"
+            className="btn btn-primary"
+            style={{ borderRadius: "8px", padding: "0.5rem 1.5rem" }}
+          >
+            Create User
+          </Link>
         </div>
       </header>
 
@@ -259,7 +269,6 @@ export default function AdminUsers() {
                 }}
               >
                 <h5 className="modal-title fw-bold d-flex align-items-center">
-                  <span className="me-2">✏️</span>
                   Edit User
                 </h5>
                 <button
