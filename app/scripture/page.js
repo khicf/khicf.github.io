@@ -227,7 +227,7 @@ export default function ScripturePage() {
             aria-label="Filter by book"
             style={{ fontSize: '0.9rem' }}
           >
-            <option value="">📚 All Books</option>
+            <option value="">All Books</option>
             {books.map((book) => (
               <option key={book} value={book}>
                 {book}
@@ -243,7 +243,7 @@ export default function ScripturePage() {
             aria-label="Filter by author"
             style={{ fontSize: '0.9rem' }}
           >
-            <option value="">👤 All Authors</option>
+            <option value="">All Authors</option>
             {authors.map((author) => (
               <option key={author} value={author}>
                 {author}
@@ -259,9 +259,9 @@ export default function ScripturePage() {
             aria-label="Sort scriptures"
             style={{ fontSize: '0.9rem' }}
           >
-            <option value="newest">🕐 Newest First</option>
-            <option value="oldest">⏰ Oldest First</option>
-            <option value="longest">📏 Longest First</option>
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="longest">Longest First</option>
           </select>
         </div>
       </div>
@@ -295,9 +295,6 @@ export default function ScripturePage() {
           })
         ) : (
           <div className="empty-state text-center py-5">
-            <div className="mb-4">
-              <span className="display-1 text-muted">📖</span>
-            </div>
             <h3 className="text-muted mb-3">No scriptures found</h3>
             <p className="text-muted mb-4">
               {searchTerm || selectedBook || selectedAuthor

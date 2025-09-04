@@ -118,10 +118,7 @@ export default function AdminEvents() {
       {/* Add Event Form */}
       <div className="card mb-4 border-0 shadow-sm" style={{ borderRadius: '12px' }}>
         <div className="card-header bg-transparent border-0 pt-4 pb-0">
-          <h5 className="card-title fw-bold d-flex align-items-center mb-3">
-            <span className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-              <span style={{ fontSize: '1.2rem' }}>📅</span>
-            </span>
+          <h5 className="card-title fw-bold mb-3">
             Add New Event
           </h5>
         </div>
@@ -160,7 +157,7 @@ export default function AdminEvents() {
               <label className="form-check-label" htmlFor="isPublic">Public Event</label>
             </div>
             <button type="submit" className="btn btn-primary" style={{ borderRadius: '8px', padding: '0.5rem 2rem' }}>
-              📅 Add Event
+              Add Event
             </button>
           </form>
         </div>
@@ -170,7 +167,6 @@ export default function AdminEvents() {
       <div className="events-list">
         <div className="d-flex align-items-center justify-content-between mb-4">
           <h2 className="mb-0 fw-bold d-flex align-items-center">
-            <span className="me-2">📋</span>
             Existing Events
             {events.length > 0 && (
               <span className="badge bg-primary ms-2">{events.length}</span>
@@ -190,7 +186,6 @@ export default function AdminEvents() {
                           <h5 className="fw-bold text-dark mb-1">{event.title}</h5>
                           <div className="event-meta text-muted small mb-2">
                             <div className="d-flex align-items-center mb-1">
-                              <span className="me-2">📅</span>
                               <span>{new Date(event.date).toLocaleDateString('en-US', { 
                                 year: 'numeric', 
                                 month: 'long', 
@@ -200,15 +195,14 @@ export default function AdminEvents() {
                             </div>
                             {event.location && (
                               <div className="d-flex align-items-center">
-                                <span className="me-2">📍</span>
                                 <span>{event.location}</span>
                               </div>
                             )}
                           </div>
                         </div>
                         {!event.isPublic && (
-                          <span className="badge bg-secondary bg-opacity-20 text-secondary px-2 py-1" style={{ borderRadius: '20px', fontSize: '0.75rem' }}>
-                            🔒 Private
+                          <span className="badge bg-primary bg-opacity-10 text-primary px-2 py-1" style={{ borderRadius: '20px', fontSize: '0.75rem', fontWeight: '500' }}>
+                            Private
                           </span>
                         )}
                       </div>
@@ -238,7 +232,7 @@ export default function AdminEvents() {
                         onClick={() => handleDeleteEvent(event.id)}
                         style={{ borderRadius: '6px' }}
                       >
-                        🗑️ Delete
+                        Delete
                       </button>
                     </div>
                   </div>
@@ -249,7 +243,6 @@ export default function AdminEvents() {
         ) : (
           <div className="empty-state text-center py-5">
             <div className="mb-4">
-              <span className="display-1 text-muted">📅</span>
             </div>
             <h4 className="text-muted mb-3">No events created yet</h4>
             <p className="text-muted">Start by adding your first community event above.</p>

@@ -114,10 +114,9 @@ export default function AdminUsers() {
       {/* New User Requests Section */}
       <div className="mb-5">
         <h2 className="mb-4 d-flex align-items-center">
-          <span className="me-2">📋</span>
           New User Requests
           {unapprovedUsers.length > 0 && (
-            <span className="badge bg-warning text-dark ms-2">{unapprovedUsers.length}</span>
+            <span className="badge bg-primary text-white ms-2">{unapprovedUsers.length}</span>
           )}
         </h2>
         
@@ -162,7 +161,6 @@ export default function AdminUsers() {
       {/* Approved Users Section */}
       <div>
         <h2 className="mb-4 d-flex align-items-center">
-          <span className="me-2">👥</span>
           Approved Users
           <span className="badge bg-primary ms-2">{approvedUsers.length}</span>
         </h2>
@@ -217,7 +215,7 @@ export default function AdminUsers() {
                           onClick={() => handleDelete(user.id)}
                           title="Delete user"
                         >
-                          🗑️
+                          Delete
                         </button>
                       </div>
                     </td>
@@ -229,7 +227,6 @@ export default function AdminUsers() {
         ) : (
           <div className="empty-state text-center py-4">
             <div className="mb-3">
-              <span className="display-4 text-muted">👤</span>
             </div>
             <h4 className="text-muted mb-2">No approved users</h4>
             <p className="text-muted">No users have been approved yet.</p>
@@ -315,7 +312,7 @@ export default function AdminUsers() {
                   onClick={handleUpdateUser}
                   style={{ borderRadius: '6px', padding: '0.5rem 1.5rem' }}
                 >
-                  💾 Save Changes
+                  Save Changes
                 </button>
               </div>
             </div>

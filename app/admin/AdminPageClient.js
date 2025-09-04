@@ -3,6 +3,7 @@
 import AdminEvents from "@/components/AdminEvents";
 import AdminPrayers from "@/components/AdminPrayers";
 import AdminScriptures from "@/components/AdminScriptures";
+import AdminAppreciations from "@/components/AdminAppreciations";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
@@ -59,12 +60,21 @@ export default function AdminPageClient() {
             Scriptures
           </button>
         </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "appreciations" ? "active" : ""}`}
+            onClick={() => setActiveTab("appreciations")}
+          >
+            Appreciations
+          </button>
+        </li>
       </ul>
 
       <div>
         {activeTab === "events" && <AdminEvents />}
         {activeTab === "prayers" && <AdminPrayers />}
         {activeTab === "scriptures" && <AdminScriptures />}
+        {activeTab === "appreciations" && <AdminAppreciations />}
       </div>
     </div>
   );

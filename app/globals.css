@@ -474,12 +474,12 @@ a:focus-visible,
 }
 
 .home-card:hover .bg-success.bg-opacity-10 {
-  background-color: rgba(25, 135, 84, 0.15) !important;
+  background-color: rgba(13, 110, 253, 0.15) !important;
   transform: scale(1.1);
 }
 
 .home-card:hover .bg-warning.bg-opacity-10 {
-  background-color: rgba(255, 193, 7, 0.15) !important;
+  background-color: rgba(13, 110, 253, 0.15) !important;
   transform: scale(1.1);
 }
 
@@ -502,15 +502,15 @@ a:focus-visible,
 }
 
 .home-card .btn-outline-success:hover {
-  background-color: #198754;
-  border-color: #198754;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
   color: white;
 }
 
 .home-card .btn-outline-warning:hover {
-  background-color: #ffc107;
-  border-color: #ffc107;
-  color: #212529;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
 }
 
 /* Content area improvements */
@@ -651,7 +651,7 @@ a:focus-visible,
 .rbc-toolbar {
   background: white;
   padding: 16px 20px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--pantone-gray-200);
   margin-bottom: 0;
   border-radius: 8px 8px 0 0;
 }
@@ -743,7 +743,7 @@ a:focus-visible,
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #10b981, #059669);
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
   opacity: 0.7;
 }
 
@@ -776,7 +776,7 @@ a:focus-visible,
   left: 0;
   top: -0.2rem;
   font-size: 2rem;
-  color: rgba(16, 185, 129, 0.2);
+  color: rgba(59, 130, 246, 0.2);
   font-family: Georgia, serif;
   line-height: 1;
 }
@@ -802,7 +802,7 @@ a:focus-visible,
 }
 
 .comment-item:hover .comment-avatar .bg-success.bg-opacity-10 {
-  background-color: rgba(16, 185, 129, 0.15) !important;
+  background-color: rgba(59, 130, 246, 0.15) !important;
   transform: scale(1.1);
 }
 
@@ -838,7 +838,7 @@ a:focus-visible,
 /* Enhanced empty state for Prayer Wall */
 .prayer-wall-empty {
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border: 2px dashed rgba(16, 185, 129, 0.2);
+  border: 2px dashed rgba(59, 130, 246, 0.2);
 }
 
 /* Responsive improvements for prayer cards */
@@ -866,13 +866,15 @@ a:focus-visible,
 }
 
 /* Admin Components Enhancements */
-.admin-events .event-admin-card {
+.admin-events .event-admin-card,
+.admin-appreciations .appreciation-admin-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
 
-.admin-events .event-admin-card::before {
+.admin-events .event-admin-card::before,
+.admin-appreciations .appreciation-admin-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -883,22 +885,26 @@ a:focus-visible,
   opacity: 0.7;
 }
 
-.admin-events .event-admin-card:hover {
+.admin-events .event-admin-card:hover,
+.admin-appreciations .appreciation-admin-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
-.admin-events .event-admin-card:hover::before {
+.admin-events .event-admin-card:hover::before,
+.admin-appreciations .appreciation-admin-card:hover::before {
   opacity: 1;
   height: 4px;
 }
 
-.admin-events .event-actions .btn {
+.admin-events .event-actions .btn,
+.admin-appreciations .appreciation-actions .btn {
   transition: all 0.2s ease;
   font-weight: 500;
 }
 
-.admin-events .event-actions .btn:hover {
+.admin-events .event-actions .btn:hover,
+.admin-appreciations .appreciation-actions .btn:hover {
   transform: translateY(-1px);
 }
 

@@ -95,7 +95,6 @@ export default function AdminPrayers() {
       <div className="prayers-list">
         <div className="d-flex align-items-center justify-content-between mb-4">
           <h2 className="mb-0 fw-bold d-flex align-items-center">
-            <span className="me-2">🙏</span>
             Prayer Requests
             {prayers.length > 0 && (
               <span className="badge bg-primary ms-2">{prayers.length}</span>
@@ -114,11 +113,9 @@ export default function AdminPrayers() {
                         <div className="flex-grow-1">
                           <div className="prayer-meta text-muted small mb-2">
                             <div className="d-flex align-items-center mb-1">
-                              <span className="me-2">👤</span>
                               <span>By {prayer.author || 'Anonymous'}</span>
                             </div>
                             <div className="d-flex align-items-center">
-                              <span className="me-2">📅</span>
                               <span>{new Date(prayer.date).toLocaleDateString('en-US', { 
                                 year: 'numeric', 
                                 month: 'long', 
@@ -128,8 +125,8 @@ export default function AdminPrayers() {
                           </div>
                         </div>
                         {!prayer.isPublic && (
-                          <span className="badge bg-secondary bg-opacity-20 text-secondary px-2 py-1" style={{ borderRadius: '20px', fontSize: '0.75rem' }}>
-                            🔒 Private
+                          <span className="badge bg-primary bg-opacity-10 text-primary px-2 py-1" style={{ borderRadius: '20px', fontSize: '0.75rem', fontWeight: '500' }}>
+                            Private
                           </span>
                         )}
                       </div>
@@ -160,14 +157,14 @@ export default function AdminPrayers() {
                         onClick={() => handleToggleVisibility(prayer)}
                         style={{ borderRadius: '6px' }}
                       >
-                        {prayer.isPublic ? '🔒 Private' : '🌐 Public'}
+                        {prayer.isPublic ? 'Private' : 'Public'}
                       </button>
                       <button 
                         className="btn btn-outline-danger btn-sm flex-fill"
                         onClick={() => handleDeletePrayer(prayer.id)}
                         style={{ borderRadius: '6px' }}
                       >
-                        🗑️ Delete
+                        Delete
                       </button>
                     </div>
                   </div>
@@ -178,7 +175,6 @@ export default function AdminPrayers() {
         ) : (
           <div className="empty-state text-center py-5">
             <div className="mb-4">
-              <span className="display-1 text-muted">🙏</span>
             </div>
             <h4 className="text-muted mb-3">No prayer requests found</h4>
             <p className="text-muted">Prayer requests will appear here once they are submitted by community members.</p>

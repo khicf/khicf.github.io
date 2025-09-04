@@ -80,7 +80,6 @@ export default function AdminScriptures() {
       <div className="scriptures-list">
         <div className="d-flex align-items-center justify-content-between mb-4">
           <h2 className="mb-0 fw-bold d-flex align-items-center">
-            <span className="me-2">📖</span>
             Scriptures
             {scriptures.length > 0 && (
               <span className="badge bg-primary ms-2">{scriptures.length}</span>
@@ -100,11 +99,9 @@ export default function AdminScriptures() {
                           <h5 className="fw-bold text-dark mb-1">{scripture.reference}</h5>
                           <div className="scripture-meta text-muted small mb-2">
                             <div className="d-flex align-items-center mb-1">
-                              <span className="me-2">👤</span>
                               <span>By {scripture.author}</span>
                             </div>
                             <div className="d-flex align-items-center">
-                              <span className="me-2">📅</span>
                               <span>{new Date(scripture.date).toLocaleDateString('en-US', { 
                                 year: 'numeric', 
                                 month: 'long', 
@@ -142,7 +139,7 @@ export default function AdminScriptures() {
                         onClick={() => handleDeleteScripture(scripture.id)}
                         style={{ borderRadius: '6px' }}
                       >
-                        🗑️ Delete
+                        Delete
                       </button>
                     </div>
                   </div>
@@ -153,7 +150,6 @@ export default function AdminScriptures() {
         ) : (
           <div className="empty-state text-center py-5">
             <div className="mb-4">
-              <span className="display-1 text-muted">📖</span>
             </div>
             <h4 className="text-muted mb-3">No scriptures found</h4>
             <p className="text-muted">Daily scriptures will appear here once they are shared by community members.</p>

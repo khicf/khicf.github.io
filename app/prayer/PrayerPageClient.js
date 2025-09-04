@@ -152,8 +152,8 @@ export default function PrayerPageClient() {
                       </div>
                     </div>
                     {!prayer.isPublic && (
-                      <span className="badge bg-secondary bg-opacity-20 text-secondary px-3 py-2" style={{ borderRadius: '20px' }}>
-                        🔒 Private
+                      <span className="badge bg-primary bg-opacity-10 text-primary px-3 py-2" style={{ borderRadius: '20px', fontSize: '0.8rem', fontWeight: '500' }}>
+                        Private
                       </span>
                     )}
                   </div>
@@ -171,9 +171,9 @@ export default function PrayerPageClient() {
                   <div className="comments-section">
                     <div className="comments-header d-flex align-items-center justify-content-between mb-3">
                       <h6 className="mb-0 fw-bold text-muted d-flex align-items-center">
-                        💬 Comments
+                        Comments
                         {prayer.comments && prayer.comments.length > 0 && (
-                          <span className="badge bg-light text-muted ms-2">{prayer.comments.length}</span>
+                          <span className="badge bg-primary text-white ms-2" style={{ fontSize: '0.7rem' }}>{prayer.comments.length}</span>
                         )}
                       </h6>
                     </div>
@@ -182,8 +182,8 @@ export default function PrayerPageClient() {
                         {prayer.comments.map(comment => (
                           <div key={comment.id} className="comment-item d-flex mb-3 p-3" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
                             <div className="comment-avatar flex-shrink-0 me-3">
-                              <div className="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style={{ width: '36px', height: '36px' }}>
-                                <span className="fw-bold text-success" style={{ fontSize: '0.9rem' }}>
+                              <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style={{ width: '36px', height: '36px' }}>
+                                <span className="fw-bold text-primary" style={{ fontSize: '0.9rem' }}>
                                   {comment.author.charAt(0).toUpperCase()}
                                 </span>
                               </div>
@@ -207,14 +207,13 @@ export default function PrayerPageClient() {
                       </div>
                     ) : (
                       <div className="no-comments text-center py-4" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-                        <div className="text-muted mb-2" style={{ fontSize: '2rem' }}>💝</div>
-                        <p className="text-muted mb-0">No encouragements yet. Be the first to uplift this prayer!</p>
+                        <p className="text-muted mb-0">No comments yet. Be the first to share encouragement!</p>
                       </div>
                     )}
 
                     {session && (
-                      <div className="add-comment-section mt-4 p-3" style={{ backgroundColor: '#f0f9ff', borderRadius: '8px', border: '1px solid rgba(59, 130, 246, 0.1)' }}>
-                        <h6 className="fw-bold text-primary mb-3">💝 Add Encouragement</h6>
+                      <div className="add-comment-section mt-4 p-3" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}>
+                        <h6 className="fw-bold text-primary mb-3">Add Comment</h6>
                         <div className="mb-3">
                           <textarea
                             className="form-control border-0"
@@ -252,7 +251,7 @@ export default function PrayerPageClient() {
                               disabled={!commentText.trim()}
                               style={{ borderRadius: '8px', fontWeight: '500' }}
                             >
-                              🙏 Encourage
+                              Post Comment
                             </button>
                           </div>
                         </div>
@@ -264,9 +263,6 @@ export default function PrayerPageClient() {
             ))
           ) : (
             <div className="empty-state text-center py-5">
-              <div className="mb-4">
-                <span className="display-1 text-muted">🙏</span>
-              </div>
               <h3 className="text-muted mb-3">No prayer requests found</h3>
               <p className="text-muted mb-4">
                 {searchTerm
