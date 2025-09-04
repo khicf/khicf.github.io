@@ -337,11 +337,13 @@ export default function ScripturePage() {
         )}
       </div>
       
-      <Pagination
-        itemsPerPage={itemsPerPage}
-        totalItems={filteredScriptures.length}
-        paginate={paginate}
-      />
+      {filteredScriptures.length > itemsPerPage && (
+        <Pagination
+          itemsPerPage={itemsPerPage}
+          totalItems={filteredScriptures.length}
+          paginate={paginate}
+        />
+      )}
     </div>
   );
 }

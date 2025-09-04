@@ -7,6 +7,7 @@ export default function HomePage() {
   const [latestEvents, setLatestEvents] = useState([]);
   const [recentPrayers, setRecentPrayers] = useState([]);
   const [recentScriptures, setRecentScriptures] = useState([]);
+  const [dailyScripture, setDailyScripture] = useState(null);
 
   useEffect(() => {
     // Fetch Latest Events
@@ -46,6 +47,19 @@ export default function HomePage() {
       .catch((error) => {
         console.error('Error fetching scriptures:', error);
         setRecentScriptures([]);
+      });
+
+    // Fetch Daily Scripture
+    fetch("/api/scriptures/daily")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.scripture) {
+          setDailyScripture(data.scripture);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching daily scripture:', error);
+        setDailyScripture(null);
       });
   }, []);
 
@@ -328,6 +342,69 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* Daily Scripture Section */}
+      {dailyScripture && (
+        <section className="daily-scripture-section mt-5">
+          <div 
+            className="card border-0 shadow-sm"
+            style={{
+              borderRadius: "16px",
+              backgroundColor: "#4a5568",
+              backgroundImage: "url('https://images.unsplash.com/photo-1507692049790-de58290a4334?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80')",
+              backgroundSize: "cover",
+              backgroundPosition: "center 25%",
+              backgroundRepeat: "no-repeat",
+              color: "white",
+              position: "relative",
+              overflow: "hidden",
+              minHeight: "300px"
+            }}
+          >
+            {/* Dark overlay for better text readability */}
+            <div 
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "rgba(0, 0, 0, 0.6)",
+                zIndex: 1
+              }}
+            ></div>
+            <div className="card-body p-4 p-md-5 text-center position-relative" style={{ zIndex: 2 }}>
+              <div className="mb-3">
+                <span className="badge bg-light text-primary px-3 py-2 rounded-pill">
+                  Scripture of the Day
+                </span>
+              </div>
+              <blockquote className="blockquote mb-4">
+                <p className="fs-4 mb-3 fw-light" style={{ lineHeight: "1.6", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>
+                  "{dailyScripture.passage}"
+                </p>
+                <footer className="blockquote-footer">
+                  <cite className="fs-5" style={{ color: "rgba(255,255,255,0.9)" }}>
+                    {dailyScripture.reference}
+                  </cite>
+                </footer>
+              </blockquote>
+              <div style={{ color: "rgba(255,255,255,0.8)" }}>
+                <small>
+                  Shared by {dailyScripture.author} • 
+                  <Link 
+                    href={`/scripture/${dailyScripture.id}`}
+                    className="text-white ms-1"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Read More
+                  </Link>
+                </small>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
