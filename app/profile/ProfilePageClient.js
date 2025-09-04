@@ -1,12 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 export default function ProfilePageClient() {
+  const { data: session, update } = useSession();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [newUsername, setNewUsername] = useState("");
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (session?.user?.name) {
+      setNewUsername(session.user.name);
+    }
+  }, [session]);
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
@@ -25,6 +34,30 @@ export default function ProfilePageClient() {
 
     const data = await res.json();
     setMessage(data.message);
+  };
+
+  const handleChangeUsername = async (e) => {
+    e.preventDefault();
+    if (!newUsername.trim()) {
+      setMessage("Username cannot be empty.");
+      return;
+    }
+
+    const res = await fetch("/api/user/username", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ newUsername }),
+    });
+
+    const data = await res.json();
+    setMessage(data.message);
+    
+    if (res.ok) {
+      // Update the session to reflect the new username
+      await update();
+    }
   };
 
   return (
@@ -47,7 +80,10 @@ export default function ProfilePageClient() {
               className={`alert ${
                 message.includes("Error") ||
                 message.includes("not match") ||
-                message.includes("incorrect")
+                message.includes("incorrect") ||
+                message.includes("cannot be empty") ||
+                message.includes("same as current") ||
+                message.includes("must be between")
                   ? "alert-danger"
                   : "alert-success"
               } alert-dismissible fade show`}
@@ -56,7 +92,10 @@ export default function ProfilePageClient() {
               <strong>
                 {message.includes("Error") ||
                 message.includes("not match") ||
-                message.includes("incorrect")
+                message.includes("incorrect") ||
+                message.includes("cannot be empty") ||
+                message.includes("same as current") ||
+                message.includes("must be between")
                   ? "❌ Error:"
                   : "✅ Success:"}
               </strong>{" "}
@@ -68,6 +107,69 @@ export default function ProfilePageClient() {
               ></button>
             </div>
           )}
+
+          {/* Change Username Card */}
+          <div
+            className="card border-0 shadow-sm mb-4"
+            style={{ borderRadius: "12px" }}
+          >
+            <div className="card-header bg-transparent border-0 pt-4 pb-0">
+              <h5 className="card-title fw-bold d-flex align-items-center mb-3">
+                Change Username
+              </h5>
+              <p className="text-muted mb-0">
+                Update your display name that will be shown to other users.
+              </p>
+            </div>
+            <div className="card-body pt-3">
+              <form onSubmit={handleChangeUsername}>
+                <div className="mb-4">
+                  <label
+                    htmlFor="newUsername"
+                    className="form-label fw-semibold"
+                  >
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="newUsername"
+                    value={newUsername}
+                    onChange={(e) => setNewUsername(e.target.value)}
+                    required
+                    style={{
+                      borderRadius: "8px",
+                      padding: "0.75rem 1rem",
+                      fontSize: "0.95rem",
+                    }}
+                    placeholder="Enter your username"
+                  />
+                </div>
+
+                <div className="d-flex justify-content-end gap-2">
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => {
+                      setNewUsername(session?.user?.name || "");
+                      setMessage("");
+                    }}
+                    style={{ borderRadius: "8px", padding: "0.5rem 1.5rem" }}
+                  >
+                    Reset
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={!newUsername.trim() || newUsername === session?.user?.name}
+                    style={{ borderRadius: "8px", padding: "0.5rem 2rem" }}
+                  >
+                    Update Username
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
 
           {/* Change Password Card */}
           <div

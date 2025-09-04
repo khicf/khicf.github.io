@@ -70,6 +70,20 @@ export const authOptions = {
       if (user) {
         token.id = user.id;
         token.role = user.role;
+      } else if (token.id || token.sub) {
+        // Fetch fresh user data from database for each request to keep session updated
+        try {
+          const freshUser = await prisma.user.findUnique({
+            where: { id: token.id || token.sub }
+          });
+          if (freshUser) {
+            token.name = freshUser.name;
+            token.email = freshUser.email;
+            token.role = freshUser.role;
+          }
+        } catch (error) {
+          console.error('Error fetching fresh user data:', error);
+        }
       }
       return token;
     },
