@@ -118,15 +118,15 @@ export default function EventDetailPage() {
                 <div className="row g-3">
                   <div className="col-12 col-lg-6">
                     <div className="detail-item">
-                      <strong className="text-primary">📅 Date:</strong>
-                      <div 
-                        className="mt-1" 
-                        style={{ 
-                          wordBreak: 'break-word',
-                          lineHeight: '1.4',
-                          fontSize: '0.95rem',
-                          overflowWrap: 'break-word',
-                          hyphens: 'auto'
+                      <strong className="text-primary">Date:</strong>
+                      <div
+                        className="mt-1"
+                        style={{
+                          wordBreak: "break-word",
+                          lineHeight: "1.4",
+                          fontSize: "0.95rem",
+                          overflowWrap: "break-word",
+                          hyphens: "auto",
                         }}
                       >
                         {formatEventDate(event)}
